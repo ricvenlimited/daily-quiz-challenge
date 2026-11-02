@@ -3,7 +3,7 @@
 **Last reviewed:** 2 November 2026  
 **Status:** Current V1 implementation documented; future controls are explicitly marked as planned.
 
-This document describes the deployed/code-backed architecture of Daily Quiz & Challenge. It is not a target-state design presented as if already implemented. The app uses Cloudflare Workers; Firebase is not part of this product.
+This document describes the deployed/code-backed architecture of Daily Quiz & Challenge. It is not a target-state design presented as if already implemented. The app uses Cloudflare Workers as its backend intermediary.
 
 ## 1. System overview
 
@@ -229,7 +229,7 @@ Before release:
 ## 13. Architecture change control
 
 - This document describes Daily Quiz & Challenge only.
-- Firebase architecture from old V2 planning notes is superseded and must not be reintroduced as current infrastructure.
+- Superseded V2 backend proposals must not be reintroduced as current infrastructure.
 - RichInsights is a separate product/repository; do not copy its backend or modify its code as part of Daily Quiz work.
 - Keep confirmed implementation, planned work and proposals explicitly labelled.
 - Update this document whenever Worker routes, provider credentials, storage bindings, authentication, scoring or billing boundaries change.
