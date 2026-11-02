@@ -30,7 +30,7 @@ Worker configuration: `wrangler.toml`
 
 The Worker integrates Open Trivia DB (General Knowledge and Science), Africa API (Africa & Nigeria), the fact-first Current Affairs implementation and a separate News Quiz route using NewsData.io.
 
-**This product uses Cloudflare, not Firebase.** No Firebase Authentication, Firestore or Firebase Cloud Functions are part of the current architecture. No Cloudflare D1/KV/R2 database binding is currently configured. Current Affairs seed data is version-controlled JavaScript and runtime fallback generation is request-scoped.
+**Cloudflare Workers are the backend platform for this product.** No Cloudflare D1/KV/R2 database binding is currently configured. Current Affairs seed data is version-controlled JavaScript and runtime fallback generation is request-scoped.
 
 See [backend-architecture.md](backend-architecture.md) for the verified architecture, security boundaries, current limitations and future hardening plan.
 
@@ -68,5 +68,4 @@ Configure secret values through Cloudflare's secret-management workflow. Never c
 - The current React/Vite/Capacitor application is the V1 reference; future native redesign plans are not completed implementation.
 - Bible remains a future product experience/V1 placeholder.
 - Google Play Billing, subscriptions, Remove Ads purchases and premium entitlement enforcement are planned, not implemented.
-- Do not introduce Firebase based on the superseded V2 proposal.
 - Preserve existing production signing and AdMob configuration during Android build changes.
