@@ -23,7 +23,7 @@ The redesign is intentionally deferred while the current V1 is completed. The cu
 ## 2. Product Vision
 
 **Product:** Daily Quiz & Challenge  
-**Developer/brand:** Richard Studios
+**Developer/brand:** Ricven
 
 Long-term goal: build a polished, dependable quiz platform that people enjoy returning to, with fresh questions, strong category experiences, engaging gameplay, useful results, dependable monetization, and a professional visual identity.
 
@@ -88,43 +88,62 @@ What we are studying from references:
 - Gamification
 - Overall polish
 
-We must create an original Richard Studios / Daily Quiz & Challenge identity.
+Create an original Daily Quiz & Challenge expression of the Ricven identity using the shared Ricven/RichInsights brand system.
 
-## 5. Core Colour Direction
+## 5. Approved Ricven / RichInsights Brand Colour System
 
-Initial palette — **not final until visually tested and accessibility-checked**:
+**Source of truth:** the current RichInsights Android implementation, `app/src/main/java/com/ricven/richinsights/ui/theme/Color.kt` (Colours v2). Daily Quiz & Challenge must reuse these exact shared brand tokens. This replaces the experimental palette in the original draft.
 
-| Role | Direction |
+### Brand primitives
+
+| Token | Hex | Intended use |
+|---|---|---|
+| Deep Navy | `#0B2970` | Brand anchor and strong surfaces |
+| Blue | `#1769E0` | Primary actions and selected navigation |
+| Electric Cyan | `#19B5FE` | Progress, focus and signature accents |
+| Warm Gold | `#F4B942` | Achievements, trophies and meaningful milestones; use sparingly |
+
+### Light surfaces and text
+
+| Token | Hex |
 |---|---|
-| Background | #F8FAFC / near-white |
-| Primary blue | #1769FF |
-| Deep blue | #0B3D91 |
-| Dark text | #0F172A |
-| Secondary text | #64748B |
-| Cards | #FFFFFF |
-| Success | Green |
-| Error | Red |
-| Accent | Warm amber/gold |
+| Surface | `#FFFFFF` |
+| Surface Accent | `#E8F7FF` |
+| Surface Strong | `#0B2970` |
+| Outline | `#D9E2F2` |
+| Progress Track | `#E3EAF7` |
+| Primary Text | `#0D0D0D` |
+| Body Text | `#2C2C2C` |
+| Secondary Text | `#565656` |
 
-Colour philosophy:
+### Dark surfaces and text
 
-- **Blue** = primary action, navigation, important interactive elements
-- **White/near-white** = clarity, space, clean surfaces
-- **Dark navy** = text, authority, strong hierarchy
-- **Amber/gold** = achievements, streaks, points, rewards
-- **Green** = correct/success
-- **Red** = incorrect/error
+| Token | Hex |
+|---|---|
+| Background | `#061332` |
+| Surface | `#0D1F49` |
+| Outline | `#1C3672` |
+| On Strong Surface | `#FFFFFF` |
+| On Strong Body | `#E0E2E7` |
+| On Strong Secondary | `#B6BCC8` |
 
-Amber/gold should be an accent, not a dominant colour.
+### Supporting semantic colours
 
-Accessibility requirements:
+| Token | Hex |
+|---|---|
+| Success | `#22A06B` |
+| Success Text | `#167A4C` |
+| Error | `#C93B3B` |
+| Dark Error | `#FFB4AB` |
 
-- Do not rely on colour alone to communicate meaning.
-- Correct answers should use colour plus a checkmark/label.
-- Incorrect answers should use colour plus an X/label.
-- Maintain readable contrast.
-- Check final colours against current accessibility guidance before implementation.
-- Touch targets must be comfortable for mobile use.
+### Usage and accessibility rules
+
+- Keep the brand primitives consistent in light and dark themes; adapt surfaces and text using the tokens above.
+- Gold is an achievement/reward accent, not a routine navigation or generic action colour.
+- Cyan and Blue carry interaction, selection and progress emphasis. Avoid making every element bright.
+- Never rely on colour alone for correct/incorrect states; pair colour with iconography and explicit labels.
+- Validate contrast, text scaling and touch targets on actual Android screen sizes.
+- The former experimental palette is superseded and must not override these exact shared brand tokens.
 
 ## 6. Typography
 
@@ -1026,3 +1045,29 @@ The V1 AdMob behavior must be preserved as a functional reference during the V2 
 **V1 UI/UX status: STABILIZED REFERENCE.**
 
 **Next milestone: Native Android V2 product architecture and UX design.**
+
+
+## 29. Ricven alignment and design workflow
+
+### Penpot + Claude
+
+- **Penpot is the active design workspace** for wireframes, screen layouts, reusable components, prototypes and design-system exploration.
+- **Claude is an AI-assisted collaborator** for design exploration, flow review, specification refinement and implementation guidance.
+- Penpot remains the editable visual source for approved designs. Keep approved requirements, design decisions, component behaviour and implementation status recorded in this repository.
+- Claude-generated suggestions are proposals until reviewed and accepted; never silently convert them into confirmed product decisions.
+- Figma may remain a secondary reference, but Penpot is the active primary design tool.
+- Review every proposed design against the current product architecture and exact shared palette before implementation.
+
+### Premium redesign — five experience pillars
+
+1. **Upgraded Home Dashboard:** clear Daily Challenge entry, streak/progress summary, category discovery, useful quick actions and meaningful return-user context.
+2. **Immersive Quiz Experience:** focused question canvas, clear progress/timer hierarchy, comfortable answer targets, accessible feedback, subtle transitions and robust loading/network/error states.
+3. **Achievements & Competition:** points, streak milestones, badges, trophies, personal bests, challenges and leaderboards. Early competition should be non-cash.
+4. **Better Category Experiences:** dedicated category landing pages, useful subtopic discovery, category context and clear availability/access states within one shared component system.
+5. **Learning & Performance Centre:** quiz history, accuracy/topic trends, difficulty/category breakdowns, strengths, improvement areas and actionable practice recommendations. Distinguish local V1 metrics from future account-synced analytics.
+
+These five pillars are design targets, not a statement that all features are implemented in V1.
+
+### Design-to-implementation acceptance
+
+Before implementation, each major flow should include Penpot frames for primary, empty, loading, error and relevant offline states; a component inventory and interaction specification; light/dark token mapping; compact and large-screen checks; accessibility checks; and a traceable link to the corresponding repository requirement.
