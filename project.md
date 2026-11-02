@@ -1030,3 +1030,32 @@ The former `current-affairs-project.md` is consolidated into this roadmap and `b
 - **D1:** persistence was reserved as a possible later step. No D1 binding or persistent Question Bank storage is deployed.
 - **Quality:** exactly four unique options, one correct answer, source/fact traceability, temporal validity, conservative rejection of ambiguous/weakly supported facts and political neutrality. Freshness-sensitive officeholder and dated-event facts need review before serving.
 - **Commercial separation:** FREE/PREMIUM/SPECIAL_PACK labels are future access metadata only; billing/entitlements must not be embedded in fact/question generation.
+
+
+### Current Affairs source registry and fact contract retained
+
+**Source priority:** constitutional/statutory and official government sources first; official institution/organization sources next; primary intergovernmental datasets with their vintage; reputable secondary references only when a primary source is unavailable. General web pages are discovery aids, not final authorities for time-sensitive facts.
+
+**Source registry candidates retained from the former architecture document:**
+
+| Domain | Primary source | Intended coverage / handling |
+|---|---|---|
+| Nigeria | Federal Government / official government portals | Government structure and public offices |
+| Nigeria | INEC | States, FCT, LGA and electoral/geographic facts |
+| Nigeria | National Assembly official sources | Senate/House leadership and institutional facts |
+| Nigeria | Presidency / State House | Presidency, appointments and executive facts |
+| Nigeria | Central Bank of Nigeria | Monetary/economic facts and institutional leadership |
+| Africa | African Union | Member states and institutions; check official suspension/status notes |
+| Africa | ECOWAS | Membership and institutional facts; reverify because membership changes |
+| World | United Nations | Member states and international institutions |
+| Economy | World Bank Open Data | Country/development indicators with reference year |
+| Economy | IMF datasets / World Economic Outlook | Macroeconomic indicators with dataset vintage |
+| International | WHO, UNESCO, UNICEF, WTO, OPEC, NATO, Commonwealth official sources | Organization-specific facts; verify against each primary source |
+
+The former source registry recorded INEC's official directory as supporting Nigeria's 36 states + FCT and LGA office/geopolitical-zone references; the AU official page as listing 55 member states subject to its current status notes; and the ECOWAS official membership page as the source of record. These are source-selection notes, not timeless facts to hardcode without rechecking.
+
+**Canonical fact record fields:** stable `id`; `domain`; `topic`; `entity`; `attribute`; `value`; `validFrom`; `validTo`; `lastVerified`; `source`; `sourceUrl`; `status` (active/superseded/review/invalid); and optional `notes`. Update/supersede a fact record when its value changes instead of manually editing every question derived from it.
+
+**Question generation and validation safeguards retained:** supported forms include direct/reverse recall, identification, classification, relationship, institution/function, comparison, number/count, chronology/date, matching, scenario/application, odd-one-out and multi-fact reasoning. Difficulty should reflect knowledge depth and reasoning, not obscure wording. Reject unsupported facts, ambiguous answers, weak distractors and incomplete provenance rather than padding. Each playable question must have exactly four unique options and exactly one correct answer. Time-sensitive facts require validity/freshness checks; dynamic numeric values require a reference period and dataset vintage.
+
+**Implementation phase status:** the 24 September 2026 checkpoints recorded the Question Bank contract/manager, population pipeline and audit, quiz assembly, Worker integration and Step A request-scoped runtime generation as complete. The former document's opening status line saying implementation had not started was stale and is superseded by those later checkpoints and the current Worker code.
