@@ -206,6 +206,13 @@ When introduced:
 
 The repository contains Cloudflare Worker configuration, GitHub Actions Android workflows and a production Worker URL. Keep development/test and production endpoints clearly separated. Secrets must be configured independently per environment.
 
+### GitHub Actions trigger behavior
+
+- `.github/workflows/android-debug.yml` supports manual `workflow_dispatch` and automatic pushes to `main` only. A push to a feature/working branch does not automatically start this debug build.
+- `.github/workflows/android-release.yml` supports manual `workflow_dispatch` only. Do not use it for routine documentation validation; it requires release signing secrets and builds production-signed artifacts.
+- To validate this working branch, open **GitHub → Actions → Android Debug APK → Run workflow**, select `docs/project-documentation-realignment` in the branch selector, and start the run. The GitHub connector available in this session can inspect workflow runs but does not expose a workflow-dispatch action, so I have not claimed to start it.
+- The latest documentation commit has no associated workflow run yet. The documentation-only changes do not alter application source, but the user's requested branch build remains a separate validation step.
+
 Before release:
 - Confirm the intended Worker environment and deployed commit.
 - Check required secrets without printing their values.
