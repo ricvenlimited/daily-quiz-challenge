@@ -7,7 +7,7 @@ This section is the current source of truth. Older dated checkpoints are retaine
 - **Product:** Daily Quiz & Challenge, a global quiz and learning product under the Ricven brand.
 - **Repository:** `ricvenlimited/daily-quiz-challenge`.
 - **V1 stack:** React, TypeScript, Vite and Capacitor Android 8.4.2. Android application ID: `com.richard.dailyquizchallenge`. Package version recorded in `package.json`: `1.1.9`.
-- **Backend:** Cloudflare Workers. This product does not use Firebase. Firebase Authentication, Firestore and Firebase Cloud Functions in earlier V2 notes were a superseded proposal and must not be treated as active architecture; Firebase belongs to the separate RichInsights project.
+- **Backend:** Cloudflare Workers. No other backend platform is part of the Daily Quiz & Challenge architecture.
 - **Client persistence:** IndexedDB `DailyQuizDB` v3 stores recent-question history. localStorage holds lightweight local streak/best-score values. This is not cloud account storage.
 - **Provider routing:** Open Trivia DB for General Knowledge and Science; Africa API for Africa & Nigeria fact-derived questions; the Current Affairs fact-first Question Bank/runtime-generation path; NewsData.io in a separate News Quiz route. Bible remains a future experience/V1 placeholder, not a completed provider path.
 - **Cloudflare persistence:** no D1, KV or R2 binding is configured in the current Worker configuration. The Current Affairs bank is version-controlled JavaScript and runtime fallback generation is request-scoped. D1 was discussed as a future persistence option only.
@@ -197,7 +197,7 @@ Worker name:
 - Entry point: `worker/index.js`
 - Compatibility date: `2026-09-17`
 
-Cloudflare is connected to GitHub repository `richardoha25-web/daily-quiz-challenge`, branch `main`, with Wrangler deployment.
+Cloudflare Workers provide the backend intermediary; the current repository is `ricvenlimited/daily-quiz-challenge`.
 
 ## 8. Worker/API status — VERIFIED
 Root response works:
@@ -396,7 +396,7 @@ The UI, quiz engine and content services should query centralized entitlement st
 
 ### Backend responsibility
 
-Future billing should use trusted server-side purchase verification and entitlement synchronization through the approved Cloudflare architecture. This remains future work; do not introduce Firebase into this product.
+Future billing should use trusted server-side purchase verification and entitlement synchronization through the approved Cloudflare architecture. This remains future work.
 
 Potential commercial data:
 
@@ -679,9 +679,9 @@ The prototype was intentionally removed from `main` because V1.1 is moving to on
 ### Release workflow checkpoint
 `38f83541d6017ee2e23ee89844dededa687d54aa`
 
-## 23. Superseded Firebase V2 proposal — historical record only
+## 23. Superseded V2 backend proposal — historical record only
 
-An earlier V2 proposal described Firebase Authentication, Firestore and Firebase Cloud Functions, including protected answer keys and proposed quiz/session/history collections. **This proposal is superseded and is not the backend architecture for Daily Quiz & Challenge.** Firebase belongs to the separate RichInsights project. Do not implement or document Firebase as active infrastructure for this app.
+An earlier V2 proposal described an account-backed service, protected answer keys and proposed quiz/session/history collections. That backend proposal is superseded and is not the architecture for Daily Quiz & Challenge.
 
 The reusable principles remain valid as future hardening requirements:
 - Keep authoritative answer keys and scoring decisions on trusted server infrastructure.
