@@ -736,7 +736,7 @@ Implemented responsibilities include:
 
 Future Cloudflare responsibilities may include authenticated account endpoints, abuse/rate controls, trusted billing verification, server-controlled entitlements and persistent user progress. These are not currently implemented.
 
-**No Firebase Authentication, Firestore or Firebase Cloud Functions are part of this product.** Firebase belongs to the separate RichInsights project; the Firebase V2 proposal in the old planning material is superseded.
+The superseded V2 backend proposal is not part of this product's architecture.
 
 No Cloudflare D1, KV or R2 binding is configured in the current `wrangler.toml`. The Current Affairs Question Bank is version-controlled JavaScript; D1 persistence is a future option only. Do not describe it as a live database until bindings, migrations and runtime use are implemented and tested.
 
