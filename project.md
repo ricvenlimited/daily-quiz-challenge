@@ -1,4 +1,32 @@
 # Daily Quiz & Challenge — Project Continuity Record
+
+## Current authoritative project status — 2 November 2026
+
+This section is the current source of truth. Older dated checkpoints are retained as history; when an older checkpoint conflicts with this section or a later verified implementation checkpoint, the newer verified state takes precedence.
+
+- **Product:** Daily Quiz & Challenge, a global quiz and learning product under the Ricven brand.
+- **Repository:** `ricvenlimited/daily-quiz-challenge`.
+- **V1 stack:** React, TypeScript, Vite and Capacitor Android 8.4.2. Android application ID: `com.richard.dailyquizchallenge`. Package version recorded in `package.json`: `1.1.9`.
+- **Backend:** Cloudflare Workers. This product does not use Firebase. Firebase Authentication, Firestore and Firebase Cloud Functions in earlier V2 notes were a superseded proposal and must not be treated as active architecture; Firebase belongs to the separate RichInsights project.
+- **Client persistence:** IndexedDB `DailyQuizDB` v3 stores recent-question history. localStorage holds lightweight local streak/best-score values. This is not cloud account storage.
+- **Provider routing:** Open Trivia DB for General Knowledge and Science; Africa API for Africa & Nigeria fact-derived questions; the Current Affairs fact-first Question Bank/runtime-generation path; NewsData.io in a separate News Quiz route. Bible remains a future experience/V1 placeholder, not a completed provider path.
+- **Cloudflare persistence:** no D1, KV or R2 binding is configured in the current Worker configuration. The Current Affairs bank is version-controlled JavaScript and runtime fallback generation is request-scoped. D1 was discussed as a future persistence option only.
+- **Monetization:** AdMob is implemented in V1. Google Play Billing, subscriptions, Remove Ads purchases and premium entitlement enforcement are future work, not implemented.
+- **Design tools:** Penpot is the active UI/UX design workspace. Claude is an AI-assisted collaborator for exploration, review and specification refinement. Figma may remain a reference tool, but is not the active design workspace.
+- **Brand:** reuse the exact Ricven/RichInsights palette in `ui-ux-project.md`; do not invent a new palette.
+- **Workflow:** use the working branch, validate changes, and do not open a PR or merge until the user explicitly requests it. Current branch: `docs/project-documentation-realignment`.
+
+### Premium product redesign targets
+
+1. **Upgraded Home Dashboard:** Daily Challenge entry, streak/progress summary, category discovery and useful quick actions.
+2. **Immersive Quiz Experience:** focused question layout, clear timer/progress, accessible answer feedback and resilient loading/error states.
+3. **Achievements & Competition:** points, badges, milestones, personal bests, challenges and leaderboards. Keep early competition non-cash.
+4. **Better Category Experiences:** dedicated category landing pages, subtopic discovery and clear content/availability states.
+5. **Learning & Performance Centre:** quiz history, accuracy trends, strengths, improvement areas and actionable practice recommendations.
+
+These are design targets, not claims that the V1 application already implements them.
+
+## Historical continuity checkpoints
 ## Current Affairs architecture checkpoint — 23 September 2026
 
 The V1 Current Affairs category is now documented as a **separate fact-first knowledge system**. It is not a NewsData headline-question system. The new `current-affairs-project.md` defines the eight domains, fact schema, source registry, verification/update rules, question-generation plan, quality validation and anti-repetition identity.
@@ -33,7 +61,7 @@ Daily Quiz & Challenge is intended to become a **long-term, high-quality quiz sy
 
 **AdMob production transition:** the existing AdMob integration is unchanged. `src/adMob.ts` retains the tested lifecycle/recovery architecture and both test/production IDs. The Android **release workflow now explicitly builds with `VITE_ADMOB_TEST_MODE=false`**, so production APK/AAB builds select the real AdMob unit IDs. Debug builds continue to use test ads. Production ad fill remains subject to inventory, network, account, frequency and policy conditions.
 
-**Immediate next step:** finish Current Affairs, then run the full V1 stabilization pass. Bible source/licensing research is established, but the Bible UI/product experience is intentionally deferred to the future native Android migration so the current V1 interface is not forced to absorb the new product architecture.
+**Historical note:** this was an earlier pre-completion checkpoint. Current Affairs subsequently reached implementation-complete status and V1 stabilization was recorded in the 24 September 2026 checkpoint below. Bible remains deferred.
 
 **UI/UX planning update:** a dedicated `ui-ux-project.md` has been created as the blueprint for the future redesign. It is intentionally separate from this file so this project record stays concise. The current UI remains functional but is **not the desired final experience**.
 
@@ -45,14 +73,14 @@ Daily Quiz & Challenge is intended to become a **long-term, high-quality quiz sy
 
 ## 1. Project identity
 - App: Daily Quiz & Challenge
-- Repo: `richardoha25-web/daily-quiz-challenge`
+- Repo: `ricvenlimited/daily-quiz-challenge`
 - Active branch: `main`
 - V2 branch: `v2-development` — **paused; do not touch during V1 work**
 - V1.1.9 validation branch: deleted after PR #6 was merged
 - AppDeploy project: `daily-quiz-challenge-zd50r1`
 - Stack: React + Vite + Capacitor 8.4.2
 - Android package: `com.richard.dailyquizchallenge`
-- Brand: Richard Studios
+- Brand: Ricven
 - Development/testing is phone/cloud based; no PC/laptop.
 
 ## 2. V1 baseline
@@ -368,7 +396,7 @@ The UI, quiz engine and content services should query centralized entitlement st
 
 ### Backend responsibility
 
-Future billing implementation should use trusted backend infrastructure for purchase verification and entitlement synchronization. Firebase and/or Cloudflare can participate according to the final security architecture.
+Future billing should use trusted server-side purchase verification and entitlement synchronization through the approved Cloudflare architecture. This remains future work; do not introduce Firebase into this product.
 
 Potential commercial data:
 
@@ -485,13 +513,12 @@ Provider/source research → architecture/data model → Worker endpoint → bro
 
 Planned future expansion can add Nigerian history, geography, culture, civic/government knowledge, African history/geography/culture, and notable African figures through additional validated sources where licensing permits.
 
-### Current Affairs — RESEARCH TARGET
-Current Affairs must be treated as changing content, not a permanent question bank.
+### Current Affairs — IMPLEMENTED V1 FACT-FIRST SYSTEM
+Current Affairs is a fact-first knowledge category, not a live-news headline feed. Its fact domains include Nigeria, Africa, World, International Organizations, Economy & Business, Geography, Sports, and Science & Technology. Facts retain source/provenance and freshness/validity metadata.
 
-Target architecture:
-News/current-events source → Cloudflare Worker → question generation/normalization → Question Engine → Quiz.
+The implementation sequence covered data contracts, controlled blueprints, deterministic question generation, distractors, quality validation, duplicate/family detection, quiz assembly, Question Bank management, Worker integration and request-scoped runtime generation when recent-history filtering exhausts the seeded bank. The 24 September 2026 checkpoints below record the V1 implementation-complete milestone. The serving seed is not the same thing as the larger verified fact dataset.
 
-Questions should carry freshness metadata such as publishedAt, source, topic, and country/region. Old current-affairs content must not remain indefinitely usable simply because it is cached.
+NewsData.io remains isolated in `worker/news-quiz/` for the separate News Quiz route. Do not conflate that route with Current Affairs.
 
 ### Bible — NEW PRODUCT EXPERIENCE
 Bible is no longer treated as only another category card.
@@ -652,18 +679,17 @@ The prototype was intentionally removed from `main` because V1.1 is moving to on
 ### Release workflow checkpoint
 `38f83541d6017ee2e23ee89844dededa687d54aa`
 
-## 23. Firebase / V2 — PAUSED, NOT ABANDONED
-V2 architecture:
-**Firebase Authentication + Firestore + Firebase Cloud Functions**.
+## 23. Superseded Firebase V2 proposal — historical record only
 
-Firebase project: `project-269333544747`  
-Firestore location: `africa-south1` (Johannesburg)
+An earlier V2 proposal described Firebase Authentication, Firestore and Firebase Cloud Functions, including protected answer keys and proposed quiz/session/history collections. **This proposal is superseded and is not the backend architecture for Daily Quiz & Challenge.** Firebase belongs to the separate RichInsights project. Do not implement or document Firebase as active infrastructure for this app.
 
-Auth:
-- Email/Password enabled
-- Google enabled
+The reusable principles remain valid as future hardening requirements:
+- Keep authoritative answer keys and scoring decisions on trusted server infrastructure.
+- Do not let the client write authoritative scores, points, streaks or quiz results.
+- Separate question content from per-user quiz history and session state.
+- Validate sessions, answers, replay/duplicate submissions and award decisions on the trusted side.
 
-V2 remains paused. Do not modify `v2-development` while V1.1 work is active.
+These are future requirements, not claims that V1 currently has server-authoritative answer submission or scoring. See `backend-architecture.md` for the actual architecture and limitations.
 
 ## 24. Exact next steps — CURRENT ROADMAP
 
@@ -708,7 +734,7 @@ V2 remains paused. Do not modify `v2-development` while V1.1 work is active.
 30. Build signed Release APK/AAB using the permanent production key.
 31. Verify signatures.
 32. Test signed Release installation/update over the previous release without uninstalling.
-33. Update the Richard Studios website only after release validation passes.
+33. Update the Ricven website only after release validation passes.
 34. Retest the public download/install/update path.
 35. Keep billing architecture synchronized across `project.md`, `commercial-monetization.md`, and `ui-ux-project.md`; do not implement billing until the planned commercial/account foundation is ready.
 
@@ -988,3 +1014,19 @@ No further feature expansion or major UI redesign should be added to the V1 code
 **V1 status: STABILIZED.**
 
 **Next milestone: Native Android V2 development.**
+
+
+## Current Affairs decisions retained from the former standalone document
+
+The former `current-affairs-project.md` is consolidated into this roadmap and `backend-architecture.md`; the standalone file is retired after preserving its important technical decisions.
+
+- **Product boundary:** Current Affairs is fact-first verified knowledge. News Quiz / Current Events is a separate live-news product path. NewsData parsing, credentials and news-specific generation remain under `worker/news-quiz/`.
+- **Knowledge domains:** Nigeria; Africa; World; International Organizations; Economy & Business; Geography; Sports; Science & Technology.
+- **Fact provenance:** facts have stable IDs, topic/domain relationships, source-registry references, provenance, verification/freshness metadata, temporal validity and lifecycle/supersession information.
+- **Question identity:** Fact → Concept → Question Family → Question Variants. Different wording does not necessarily mean a distinct knowledge item. A quiz must not contain two variants from the same family; recent-history/family cooldowns reduce repetition.
+- **Generation stages:** data contract; blueprints; deterministic question generation; distractors; quality validation; duplicate/family detection; quiz assembly; Question Bank contract/manager/population/audit; Worker integration; request-scoped runtime-generation recovery.
+- **Question Bank vs history:** the Question Bank is curated content. IndexedDB recent_history is local per-installation exposure history. They are separate systems. The recorded seed of 29 active FREE records is not the full verified fact dataset.
+- **Runtime fallback:** when recent-history filtering leaves too few eligible seeded questions, the Worker can generate a bounded request-scoped pool from verified facts, then validate, deduplicate and assemble the quiz. It does not persist generated records.
+- **D1:** persistence was reserved as a possible later step. No D1 binding or persistent Question Bank storage is deployed.
+- **Quality:** exactly four unique options, one correct answer, source/fact traceability, temporal validity, conservative rejection of ambiguous/weakly supported facts and political neutrality. Freshness-sensitive officeholder and dated-event facts need review before serving.
+- **Commercial separation:** FREE/PREMIUM/SPECIAL_PACK labels are future access metadata only; billing/entitlements must not be embedded in fact/question generation.
