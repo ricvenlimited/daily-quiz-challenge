@@ -661,28 +661,23 @@ The entitlement system should support states such as:
 
 The exact state machine will be finalized during implementation.
 
-### 19.5 Firebase / Cloudflare role
+### 19.5 Cloudflare role in future purchase verification
 
-The eventual trusted architecture can use the existing backend foundation:
+Cloudflare Workers are the current backend intermediary. A future billing design may extend the approved Cloudflare backend with trusted purchase-verification and entitlement-synchronization endpoints, after separate security review.
 
-**Android App**
-→ **Billing client**
-→ **Trusted verification/synchronization**
-→ **Firebase/Cloudflare services**
-→ **Central entitlement state**
-→ **Feature/content access**
+Conceptual future flow:
 
-Potential commercial data includes:
+```text
+Android app → Google Play Billing → purchase token
+           → Cloudflare Worker (authenticated endpoint)
+           → trusted platform purchase verification
+           → server-controlled entitlement record
+           → access decision
+```
 
-- `users`
-- `subscriptions`
-- `purchases`
-- `entitlements`
-- verification state
-- expiry/cancellation state
-- restore/synchronization state
+This is a target design, not an implemented flow. No entitlement database or purchase-verification service currently exists in this repository. Potential future records include users, purchases, subscriptions, entitlements, expiry/cancellation and verification state. Define their schema and access controls before implementation.
 
-Cloudflare Worker remains the intermediary for provider/content services and may participate in access-aware delivery where appropriate. Private provider keys and trusted commercial secrets must never be embedded in the APK.
+Keep private provider keys and billing secrets in server-side secret storage. Never embed them in the APK or expose them in client-readable question payloads.
 
 ### 19.6 Future web/direct-payment channel
 
@@ -692,7 +687,7 @@ A provider such as a suitable international/web payment processor can be evaluat
 
 - country availability
 - international payment coverage
-- payout support for Richard Studios
+- payout support for Ricven
 - transaction fees
 - recurring-payment support
 - refund/dispute handling
@@ -729,43 +724,23 @@ Billing should be implemented only after the core content architecture is stable
 
 ---
 
-# 20. Firebase and Cloudflare responsibilities
+# 20. Cloudflare backend responsibilities
 
-The future commercial architecture should integrate with the existing backend architecture.
+Daily Quiz & Challenge currently uses Cloudflare Workers as its backend intermediary for provider credentials, routing, content normalization and provider error handling.
 
-Conceptual model:
+Implemented responsibilities include:
+- Open Trivia DB for General Knowledge and Science.
+- Africa API and fact-derived question generation for Africa & Nigeria.
+- Fact-first Current Affairs Question Bank and request-scoped runtime generation.
+- A separate News Quiz route with NewsData-specific provider logic.
 
-**Android App**
-→ **Access/Entitlement layer**
-→ **Cloudflare Worker**
-→ **Trusted backend services**
-→ **Firebase / purchase state / user data**
-→ **Question/content services**
+Future Cloudflare responsibilities may include authenticated account endpoints, abuse/rate controls, trusted billing verification, server-controlled entitlements and persistent user progress. These are not currently implemented.
 
-Potential Firebase data:
+**No Firebase Authentication, Firestore or Firebase Cloud Functions are part of this product.** Firebase belongs to the separate RichInsights project; the Firebase V2 proposal in the old planning material is superseded.
 
-- `users`
-- `subscriptions`
-- `entitlements`
-- `purchases`
-- `quiz_history`
-- `quiz_results`
-- `streaks`
-- `achievements`
+No Cloudflare D1, KV or R2 binding is configured in the current `wrangler.toml`. The Current Affairs Question Bank is version-controlled JavaScript; D1 persistence is a future option only. Do not describe it as a live database until bindings, migrations and runtime use are implemented and tested.
 
-Sensitive validation should happen on trusted backend infrastructure rather than being trusted to the client APK.
-
-Cloudflare Worker remains useful for:
-
-- Protecting provider/API keys.
-- Content routing.
-- Question normalization.
-- Source selection.
-- Access-aware content delivery where appropriate.
-- Future rate limiting.
-- Backend intermediary responsibilities.
-
-Do not place private provider keys or trusted commercial secrets inside the APK.
+Never place private provider keys or trusted commercial secrets in the APK or public repository.
 
 ---
 
@@ -1274,7 +1249,7 @@ The following should remain explicitly undecided until enough information is ava
 - International pricing.
 - Final provider mix.
 - Final purchase/subscription IDs.
-- Final Firebase schema for commercial data.
+- Final Cloudflare-backed schema and access-control design for commercial data.
 - Final Google Play Billing implementation.
 - Whether certain advanced features are Premium-only or available to all users.
 
