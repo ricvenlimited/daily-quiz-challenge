@@ -240,3 +240,58 @@ Before release:
 - RichInsights is a separate product/repository; do not copy its backend or modify its code as part of Daily Quiz work.
 - Keep confirmed implementation, planned work and proposals explicitly labelled.
 - Update this document whenever Worker routes, provider credentials, storage bindings, authentication, scoring or billing boundaries change.
+
+
+## V2 target architecture and account/security plan — 3 November 2026
+
+**Status: approved target direction; not implemented or deployed.** The current V1 facts above remain unchanged. V2 uses native Kotlin/Compose and Cloudflare remains the primary backend platform.
+
+### V2 service boundaries
+
+The existing Worker and provider adapters remain the starting point. V2 should introduce a separately versioned API surface rather than breaking V1 routes. Planned service domains include:
+- Identity and authentication (email/password and Google sign-in).
+- Account/profile and preferences.
+- Quiz catalog, categories and topics.
+- Quiz-session creation, question delivery and answer submission.
+- Server-authoritative result/scoring ledger.
+- Progress, streaks and achievements.
+- Challenge participation and leaderboard queries.
+- Future entitlement and purchase verification.
+
+Exact endpoint names, request/response schemas, token format, database schema and deployment topology must be approved in Phase 1 before implementation. Existing V1 `/api/health` and `/api/questions` contracts must remain compatible during V2 development.
+
+### Cloudflare persistence evaluation
+
+Cloudflare D1 is the leading candidate for relational account/profile data, quiz sessions, authoritative attempts/results, progress and leaderboard source records. This is a V2 recommendation under evaluation, not an existing binding. The current V1 Worker has no D1, KV or R2 binding.
+
+Before configuring D1, document plan limits/cost, schema/indexes, transactional requirements, migrations, backup/restore, retention/deletion, data export, environment separation and operational monitoring. Use KV only for use cases whose consistency/expiry requirements fit it; use R2 for larger assets rather than transactional score writes. No additional Cloudflare service should be introduced without a defined requirement.
+
+### Authentication and account controls
+
+V2 supports:
+- Email/password registration and login.
+- Google sign-in.
+
+The Worker/backend must verify Google identity tokens before issuing an application session. Passwords must be stored only using a vetted password-hashing implementation supported by the Workers runtime; exact algorithm/library selection belongs to Phase 1 technical validation. Use revocable, expiring sessions and protect refresh credentials. Enforce authorization on every account-specific route, validate inputs, rate-limit sensitive operations, prevent account enumeration and replay, and never trust client-supplied user IDs, roles, premium flags or score totals.
+
+The Android client must not contain a shared secret or provider API key. CORS/origin checks are supplementary and do not authenticate a native mobile client. Keep all secrets in Cloudflare secret configuration.
+
+### Server-authoritative quiz and leaderboard model
+
+The current V1 client receives `correctAnswer` and stores streak/best-score values locally. These remain known V1 limitations. V2 must use server-issued quiz sessions, withhold answer keys from the client, validate each answer against the active session, calculate score on the Worker, enforce expiry/idempotency/replay controls, and persist authoritative results before updating rankings or achievements.
+
+Initial competition remains non-cash. Do not add cash prizes or valuable rewards until scoring, fraud controls, auditability and applicable policy/legal requirements are separately reviewed.
+
+### Phase 1 backend deliverables
+
+1. Inventory and contract documentation for existing Worker routes and provider adapters.
+2. V2 API versioning and endpoint contract proposal.
+3. Authentication/session flow and threat model.
+4. D1 suitability/cost evaluation and proposed relational ERD/schema.
+5. Authorization matrix and personal-data lifecycle rules.
+6. Quiz-session, answer-submission, score and leaderboard trust model.
+7. Rate-limit, abuse, monitoring, backup and recovery requirements.
+8. Migration/compatibility strategy that preserves V1.
+
+No account service, D1 binding, new production endpoint or V1 route change is implied by this planning document.
+
