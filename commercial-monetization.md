@@ -1548,3 +1548,25 @@ The commercial architecture remains intentionally separated from content generat
 **V1 commercial status: STABILIZED.**
 
 **Next milestone: Native Android V2 commercial/product architecture.**
+
+
+## Native Android V2 commercial integration checkpoint — 3 November 2026
+
+**Status: commercial architecture remains planned; no new billing or entitlement implementation is implied.**
+
+The approved V2 client direction is native Android using Kotlin and Jetpack Compose. The existing commercial principles in this document remain in force: a useful free experience, optional rewarded ads, clear separation between Remove Ads and Premium, transparent pricing, and no aggressive paywalls.
+
+V2 account and entitlement design must align with the approved Cloudflare backend architecture:
+- Email/password and Google sign-in are the approved account methods.
+- Account identity and authenticated sessions are separate from purchase state.
+- Purchase verification and entitlement decisions must be made by a trusted backend; a client-side premium flag or purchase callback is not authoritative.
+- Future Google Play Billing integration must be reviewed against current Play requirements at implementation time.
+- Entitlements should be centralized and server-authoritative, with clear expiry, cancellation, refund, pending and restore behavior.
+- Ad removal, Premium, Bible access, Current Affairs access and other content/feature entitlements remain distinct products or permissions as specified by the final commercial design.
+
+Native AdMob integration is a V2 implementation task in Phase 8 of `v2-native-architecture.md`; the existing V1 AdMob implementation must remain untouched while V2 is developed.
+
+The five V2 primary navigation destinations are Home, Explore, Challenges, Rankings and Profile. Commercial entry points such as Premium/Store, purchase management and entitlement details should be nested within appropriate destinations (typically Profile or relevant locked content), not added as additional primary navigation tabs.
+
+No subscription prices, product IDs, billing endpoints, D1 tables or purchase verification services are approved by this checkpoint. Those decisions require a separate implementation-ready commercial and technical review.
+
