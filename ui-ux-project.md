@@ -1071,3 +1071,52 @@ These five pillars are design targets, not a statement that all features are imp
 ### Design-to-implementation acceptance
 
 Before implementation, each major flow should include Penpot frames for primary, empty, loading, error and relevant offline states; a component inventory and interaction specification; light/dark token mapping; compact and large-screen checks; accessibility checks; and a traceable link to the corresponding repository requirement.
+
+
+## V2 native navigation and account decisions — 3 November 2026
+
+**Status: approved information architecture; detailed wireframes and visual specifications remain to be designed.**
+
+The native Android V2 application will use five persistent primary navigation destinations:
+
+1. **Home** — dashboard, Daily Challenge entry, streak/progress overview and quick actions.
+2. **Explore** — categories, subjects, topics, content discovery and quiz configuration.
+3. **Challenges** — daily and special challenges, participation and challenge history.
+4. **Rankings** — leaderboards, rankings and competitive progress.
+5. **Profile** — account/profile, personal quiz history, statistics, achievements and settings entry points.
+
+Use a persistent bottom navigation bar for these five top-level destinations. Do not add quiz, results, category detail, authentication, settings or achievement detail as additional primary tabs. Those are nested destinations within the relevant section or app-level flows.
+
+### Navigation behavior requirements
+
+- Each top-level destination should retain appropriate navigation state/back stack when users switch tabs.
+- Define clear Back and Up behavior, including from nested flows and authentication.
+- Support deep links into eligible destinations without bypassing authentication/authorization.
+- Preserve navigation and quiz state through configuration changes and process recreation where appropriate.
+- Show clear selected/unselected states and accessible labels for every destination.
+- Provide loading, empty, offline, error and retry states.
+- Authentication, registration, sign-in and recovery are flows, not bottom navigation destinations.
+- Public browsing may be available without an account; personal history, synchronized progress and protected actions require sign-in.
+
+### Account entry and authentication UX
+
+V2 will support both **email/password** and **Google sign-in**. Design the account journey to cover:
+- Sign up and sign in.
+- Google identity-provider handoff and return.
+- Email verification where required.
+- Password recovery/reset.
+- Session expiry, re-authentication and sign-out.
+- Profile editing and preferences.
+- Account deletion and clear privacy/data-retention information.
+- Understandable offline, provider failure and retry states.
+
+Do not imply that a user is authenticated merely because a Google account chooser completed. The trusted backend must verify the identity and issue the application session.
+
+### Screen inventory to wireframe
+
+In addition to the five tab roots, plan nested screens for category/topic detail, quiz setup, active quiz, answer feedback, results, quiz history, challenge detail/participation, leaderboard detail, achievement detail, profile edit, settings, sign-in, registration, verification and recovery.
+
+### Visual design constraints
+
+Continue using the approved shared Ricven/RichInsights palette and design principles already documented in this file. The five-tab structure is approved; exact icons, typography sizing, tab labels, component dimensions, responsive behavior and final screen compositions must be designed and reviewed in Penpot before production implementation.
+
