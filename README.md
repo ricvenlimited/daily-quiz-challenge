@@ -1,6 +1,6 @@
 # Daily Quiz & Challenge
 
-A global quiz and learning app built with React, TypeScript, Vite and Capacitor for Android. The current V1 application is the functional reference while the next major product redesign is planned separately.
+A global quiz and learning app under the Ricven brand. V1 is the existing React, TypeScript, Vite and Capacitor Android application; native Android V2 is being planned and developed separately with Kotlin and Jetpack Compose.
 
 ## Product
 
@@ -39,6 +39,7 @@ See [backend-architecture.md](backend-architecture.md) for the verified architec
 - [Project roadmap and continuity record](project.md)
 - [UI/UX blueprint](ui-ux-project.md)
 - [Backend architecture and security](backend-architecture.md)
+- [Native Android V2 architecture and phased roadmap](v2-native-architecture.md)
 - [Commercial and monetization plan](commercial-monetization.md)
 
 The active design workflow uses **Penpot** as the design/prototyping workspace and **Claude** as an AI-assisted collaborator. Approved decisions must be recorded in project documentation.
@@ -69,3 +70,10 @@ Configure secret values through Cloudflare's secret-management workflow. Never c
 - Bible remains a future product experience/V1 placeholder.
 - Google Play Billing, subscriptions, Remove Ads purchases and premium entitlement enforcement are planned, not implemented.
 - Preserve existing production signing and AdMob configuration during Android build changes.
+
+
+## Native Android V2
+
+V2 is developed on the separate `v2-development` branch, based on the documentation alignment branch. Its approved direction is Kotlin + Jetpack Compose with five primary destinations (Home, Explore, Challenges, Rankings and Profile), email/password and Google sign-in, and Cloudflare as the primary backend platform.
+
+V2 planning and implementation do not modify or merge into the stable V1 `main` branch. See [v2-native-architecture.md](v2-native-architecture.md) for the target architecture, security boundaries, phase plan and acceptance criteria. V2 features described there are planned unless explicitly marked implemented.
