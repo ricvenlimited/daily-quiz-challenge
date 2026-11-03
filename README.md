@@ -38,6 +38,7 @@ See [backend-architecture.md](backend-architecture.md) for the verified architec
 
 - [Project roadmap and continuity record](project.md)
 - [UI/UX blueprint](ui-ux-project.md)
+- [Current Affairs architecture and content system](current-affairs-project.md)
 - [Backend architecture and security](backend-architecture.md)
 - [Native Android V2 architecture and phased roadmap](v2-native-architecture.md)
 - [Commercial and monetization plan](commercial-monetization.md)
