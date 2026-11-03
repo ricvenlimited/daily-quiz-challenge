@@ -1,5 +1,34 @@
 # Daily Quiz & Challenge — Project Continuity Record
 
+## V2 architecture decision — 3 November 2026
+
+**Current V2 status:** Phase 1 architecture/documentation planning. Native Android V2 is approved as a separate development stream. This is a target architecture and roadmap, not implemented application functionality.
+
+- **V1 stable baseline:** `main`; preserve the existing React + TypeScript + Vite + Capacitor 8.4.2 app, package identity, signing continuity, working AdMob integration and production behavior.
+- **Documentation alignment baseline:** `docs/project-documentation-realignment`.
+- **V2 development branch:** `v2-development`, created from the documentation alignment branch. V2 implementation and planning work stays here.
+- **V2 client:** native Android, Kotlin, Jetpack Compose, Material 3, Navigation Compose, MVVM/repository architecture, Coroutines/Flow.
+- **Primary navigation:** Home, Explore, Challenges, Rankings, Profile (five destinations). Nested section flows are not additional top-level tabs.
+- **Authentication:** email/password and Google sign-in, with trusted backend verification, session lifecycle, authorization and recovery.
+- **Backend:** Cloudflare remains the primary platform. Existing Worker/provider routes are preserved and evolved through an explicitly versioned V2 API.
+- **Persistence:** D1 is the leading relational candidate for account, quiz-session, authoritative result and progress data, subject to Phase 1 cost, schema, migration, backup and security review. No D1/KV/R2 binding is currently claimed as configured.
+- **Trust boundary:** V2 quiz answers, scores, streak awards and leaderboard results must be server-authoritative; V1's client-visible answer key/local score behavior remains a documented V1 limitation.
+- **No merge to `main`:** do not merge V2 or alter V1 production behavior during V2 development. Any eventual production migration requires explicit review and approval.
+
+**Approved implementation phases:**
+1. Architecture and documentation.
+2. Native Android foundation.
+3. Navigation and screen development.
+4. User accounts and authentication.
+5. Cloudflare backend integration.
+6. Quiz and learning experience.
+7. Challenges and rankings.
+8. Monetization and release testing.
+
+Detailed architecture, security requirements, API boundaries, data domains, phase deliverables and exit criteria are in [`v2-native-architecture.md`](v2-native-architecture.md). The approved five-destination UX and navigation specification is maintained in `ui-ux-project.md`. Backend implementation facts and future Cloudflare controls remain in `backend-architecture.md`.
+
+**Workflow rule:** V1 remains stable on `main`; use `v2-development` for V2. Validate changes on the working branch. Do not open a PR or merge unless the user explicitly requests it after reviewing the work.
+
 ## Current authoritative project status — 2 November 2026
 
 This section is the current source of truth. Older dated checkpoints are retained as history; when an older checkpoint conflicts with this section or a later verified implementation checkpoint, the newer verified state takes precedence.
@@ -14,7 +43,7 @@ This section is the current source of truth. Older dated checkpoints are retaine
 - **Monetization:** AdMob is implemented in V1. Google Play Billing, subscriptions, Remove Ads purchases and premium entitlement enforcement are future work, not implemented.
 - **Design tools:** Penpot is the active UI/UX design workspace. Claude is an AI-assisted collaborator for exploration, review and specification refinement. Figma may remain a reference tool, but is not the active design workspace.
 - **Brand:** reuse the exact Ricven/RichInsights palette in `ui-ux-project.md`; do not invent a new palette.
-- **Workflow:** use the working branch, validate changes, and do not open a PR or merge until the user explicitly requests it. Current branch: `docs/project-documentation-realignment`.
+- **Workflow:** V1 remains stable on `main`; V2 work uses `v2-development` (created from `docs/project-documentation-realignment`). Validate branch work; do not open a PR or merge without the user's explicit request.
 
 ### Premium product redesign targets
 
@@ -75,7 +104,7 @@ Daily Quiz & Challenge is intended to become a **long-term, high-quality quiz sy
 - App: Daily Quiz & Challenge
 - Repo: `ricvenlimited/daily-quiz-challenge`
 - Active branch: `main`
-- V2 branch: `v2-development` — **paused; do not touch during V1 work**
+- V2 branch: `v2-development` — **active native Android V2 development branch; do not merge into V1/main without explicit approval**
 - V1.1.9 validation branch: deleted after PR #6 was merged
 - AppDeploy project: `daily-quiz-challenge-zd50r1`
 - Stack: React + Vite + Capacitor 8.4.2
