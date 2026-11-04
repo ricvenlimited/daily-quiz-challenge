@@ -1,8 +1,8 @@
 # Daily Quiz & Challenge V2 — Proposed Database Architecture
 
-**Status:** Phase 1 proposal for review — not implemented  
+**Status:** Proposed V2 data model — not implemented  
 **Target platform:** Cloudflare D1 (SQLite)  
-**Working branch:** `feature/v2-database-architecture`  
+**Project roadmap:** See [project.md](project.md). This document does not own production phases.  
 **Scope:** Documentation and design only
 
 > This document is a proposed logical and initial physical data model for V2. It does not create a D1 database, binding, migration, Worker route, authentication service, or production data. Table names and fields are recommendations for review, not approved implementation details.
@@ -15,7 +15,8 @@ The design aims to:
 
 - Keep account identity, profile, authentication credentials and sessions distinct.
 - Make the server authoritative for quiz sessions, accepted answers, scores and competitive results.
-- Preserve the exact question content and answer key used in a session so results remain auditable if a provider later changes its question.
+- Preserve the exact question content and answer key used in a session so results remain auditable if a provider or model later changes its output.
+- Support a large, multi-source question bank containing curated, provider-sourced and AI-assisted questions, with provenance and validation metadata.
 - Keep provider/source provenance for questions and content.
 - Support challenges, personal progress, achievements and non-cash leaderboards.
 - Avoid storing redundant data until a demonstrated query or performance need justifies it.
@@ -106,7 +107,24 @@ The following is the recommended starting model. Exact column types, constraints
 - Add rate limits and generic recovery responses to reduce brute-force and account-enumeration risks.
 - The exact token format, password-hashing library, email delivery provider and verification policy remain decisions for the authentication design task.
 
-### 4.2 Quiz catalog and source provenance
+### 4.2 Quiz catalog, AI generation and source provenance
+
+The question bank must support questions created through several paths: curated editorial content, external licensed/provider sources, deterministic transformation/generation and AI-assisted generation. The model must not assume that every question is AI-generated or that model output is verified fact.
+
+Recommended logical records (final normalization depends on query and scale testing):
+
+| Record / field group | Purpose | Required rules |
+|---|---|---|
+| Question identity | Stable question ID, category/topic, language, difficulty, status, content version | Stable identity across revisions; never use prompt text as identity. |
+| Source provenance | Source/provider ID, source record/reference, source URL or attribution reference, retrieved/verified timestamps, validity window and rights/access notes | Preserve the underlying evidence; do not lose source lineage when AI rewrites it. |
+| Generation metadata | Origin type (curated/provider/deterministic/AI), model/provider ID, model version, prompt/template version, generation job ID, generated timestamp | Optional for non-AI content; never store credentials or hidden chain-of-thought. |
+| Validation metadata | Validation status, schema/factual/distractor/explanation/duplicate checks, confidence or review outcome, reviewer reference where applicable, validation timestamp | Draft, quarantined or rejected content must never be served. |
+| Question family/concept | Stable concept/family ID and relationships to fact/source records | Prevent paraphrased variants from appearing together and support coverage/anti-repeat. |
+| Lifecycle and access | Draft/review/approved/retired status, FREE/PREMIUM/SPECIAL_PACK metadata, publication and expiry times | Access tier is content metadata, not proof of purchase. Entitlements remain centralized. |
+
+Do not store raw prompts, full model reasoning or unnecessary personal data. Keep generation templates and provider credentials in backend-controlled configuration. Large content banks may require a separate storage/search strategy after measured scale testing; do not assume every question body must live in D1 forever.
+
+
 
 | Table | Purpose | Important fields / rules |
 |---|---|---|
@@ -226,7 +244,7 @@ Derived values such as streaks, totals, achievements and leaderboard snapshots m
 
 Use schema migrations checked into the repository when implementation begins. Each migration should be ordered, reviewed, tested against a disposable development database and have a rollback/recovery plan. Never test destructive migrations against production.
 
-## 9. Open decisions for the next Phase 1 design tasks
+## 9. Open data-model decisions
 
 These items are deliberately not decided in this document:
 
@@ -258,4 +276,4 @@ This proposal is ready for review when we can answer:
 - Have we validated D1 limits, transactions, migration and recovery requirements before implementation?
 - Are all unresolved decisions visible rather than silently assumed?
 
-**Phase 1 status:** proposed database model and ERD drafted; awaiting joint review. No database infrastructure or application code has been changed.
+**Status:** proposed database model and ERD drafted; awaiting review. No database infrastructure or application code has been changed. Project-wide timing is governed by project.md.
