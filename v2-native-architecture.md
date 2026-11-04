@@ -90,9 +90,10 @@ Implement the approved five-destination shell using Navigation Compose. The UI/U
 
 The Android client communicates with Cloudflare through documented, versioned HTTPS APIs. It must not connect directly to D1 or call credentialed third-party providers from the app.
 
-- API routes, request/response contracts, provider adapters, backend security and server-authoritative scoring are defined in backend-architecture.md.
+- API routes, request/response contracts, provider adapters, Cloudflare AI inference/generation services, backend security and server-authoritative scoring are defined in backend-architecture.md.
 - Tables, relationships, indexes, migrations, retention and data integrity are defined in database-architecture-v2.md.
 - The client never supplies authoritative score totals, correctness flags, premium status or user ownership claims.
+- AI question generation and model-provider calls are backend-only capabilities. The Android client requests approved question content through the versioned quiz API; it never calls Workers AI or an external model directly.
 - Question delivery must not expose trusted answer keys. The Worker evaluates submitted answers and returns permitted feedback.
 - Use explicit loading, empty, error, offline and retry states. Network failure must not block access to screens or local content that is designed to remain available.
 - Keep V1 API contracts compatible while V2 uses its separately versioned API surface.
