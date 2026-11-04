@@ -708,7 +708,7 @@ Implemented responsibilities include:
 
 Future Cloudflare responsibilities may include authenticated account endpoints, abuse/rate controls, trusted billing verification, server-controlled entitlements and persistent user progress. These are not currently implemented.
 
-The superseded V2 backend proposal is not part of this product's architecture.
+V2 backend and AI implementation details are governed by backend-architecture.md; this document owns only the commercial requirements.
 
 No Cloudflare D1, KV or R2 binding is configured in the current `wrangler.toml`. The Current Affairs Question Bank is version-controlled JavaScript; D1 persistence is a future option only. Do not describe it as a live database until bindings, migrations and runtime use are implemented and tested.
 
@@ -1097,7 +1097,7 @@ This document retains commercial readiness criteria and unresolved commercial de
 
 ---
 
-# 37. Decisions still to be made
+# 35. Decisions still to be made
 
 The following should remain explicitly undecided until enough information is available:
 
@@ -1120,7 +1120,7 @@ Do not invent these values prematurely.
 
 ---
 
-# 38. Commercial success definition
+# 36. Commercial success definition
 
 The commercial system should ultimately achieve a balance between:
 
@@ -1139,7 +1139,7 @@ A successful commercial product should allow:
 
 ---
 
-## 39. Relationship with other project documents
+## 37. Relationship with other project documents
 
 - `project.md` owns the V2 roadmap, production stages and overall status.
 - `ui-ux-project.md` owns commercial feature presentation and all UX decisions.
@@ -1150,7 +1150,7 @@ A successful commercial product should allow:
 
 Do not reproduce the project roadmap or detailed backend/data architecture here. Domain-specific commercial acceptance criteria remain here; project-wide sequencing is in project.md.
 
-# 40. Final commercial vision
+# 38. Final commercial vision
 
 Daily Quiz & Challenge should evolve from a simple quiz app into a sustainable quiz and learning platform.
 
