@@ -459,7 +459,7 @@ Verified Current Affairs facts + trusted source context
 
 News Quiz remains separate: AI-generated questions must be grounded in the specific retrieved article, preserve article URL/source/time context, and expire according to the article's freshness policy.
 
-## Phase 3 — Question-generation architecture and plan
+## Question-generation architecture
 
 Phase 3 begins only after the Phase 2 fact dataset and the NewsData isolation are complete.
 
@@ -642,36 +642,11 @@ The Question Bank stores questions the system owns. User history records what a 
 
 The bank must never become a bottleneck. If eligible bank questions are insufficient, the system should generate and validate additional questions and then serve them.
 
-### Phase 3 stages
+### Generation and serving capabilities
 
-**Phase 3A — Question data model & concept/family model**  
-Define question records, provenance, concepts, question families, variants, lifecycle status and future access metadata.
+The content system needs question identity/family modeling, blueprints, question and distractor generation, factual/structural validation, duplicate detection, quiz assembly and Worker serving. These are domain capabilities, not a second project phase plan.
 
-**Phase 3B — Question blueprint/template system**  
-Define safe generation patterns for the supported question types and domains.
-
-**Phase 3C — Question generator**  
-Generate questions from verified facts and relationships.
-
-**Phase 3D — Distractor generator**  
-Construct plausible, factually incorrect, unambiguous options.
-
-**Phase 3E — Quality validator**  
-Reject questions that fail factual, linguistic, structural, difficulty or freshness checks.
-
-**Phase 3F — Duplicate/family detection**  
-Detect exact duplicates, semantic duplicates and related question families before quiz assembly.
-
-**Phase 3G — Quiz assembler**  
-Build valid 10-question quizzes while respecting family, topic, difficulty, freshness and user-history rules.
-
-**Phase 3H — Worker integration**  
-Connect the validated Current Affairs question system to the existing Worker without disturbing Science, General Knowledge, Africa & Nigeria or AdMob.
-
-**Phase 3I — Android/debug testing**  
-Test Current Affairs end-to-end on the Debug APK, including repeated quizzes, family cooldown behaviour, connectivity failures, stale-fact handling and regression of existing categories.
-
-### Phase 3 implementation safety rule
+### Content implementation safety rule
 
 Do not replace the verified fact database with generated questions. Facts remain the source of truth. Do not mix Question Bank storage with user recent history. Do not reintroduce NewsData into the Current Affairs route.
 
