@@ -49,7 +49,7 @@ The stages below govern the whole V2 production. No other document may create a 
 
 ## 4. Current project status
 
-- **Stage 1 — complete after this documentation realignment is committed and verified.**
+- **Stage 1 — complete.** The eight-document authority map and V2 roadmap have been reconciled; the AI question-generation requirement is included.
 - **Next: Stage 2 — Brand and visual foundations.**
 - V2 application implementation, D1 deployment, authentication services, billing and native ads are not claimed as complete.
 - Penpot is the active design workspace. Figma is reference/backup only.
@@ -86,7 +86,7 @@ The UI/UX document owns the detailed experience decisions. Backend/database docu
 | database-architecture-v2.md | V2 data model, entities, relationships, constraints, indexes, lifecycle and data integrity. |
 | commercial-monetization.md | Ads, Premium, Store, billing, pricing, entitlements and commercial policy. |
 
-The former current-affairs-project.md was a retired standalone document. Its still-relevant Current Affairs decisions are retained in project.md and backend-architecture.md; it is not an active authority and should not be recreated.
+`current-affairs-project.md` remains an active specialist authority for Current Affairs sources, fact integrity, freshness, question families and category-specific content quality. It does not own the overall V2 roadmap or generic Cloudflare AI infrastructure.
 
 ## 7. AI and question-content strategy
 
