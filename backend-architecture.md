@@ -95,17 +95,7 @@ Current Affairs is a fact-first knowledge system, not a NewsData headline quiz. 
 
 Its code path imports a version-controlled Question Bank, validates the collection, applies recent-history cooldowns, and invokes request-scoped runtime generation when the eligible seeded pool is insufficient. Generated fallback records are validated and assembled for the current request; they are not persisted.
 
-The implementation phases documented on 24 September 2026 include:
-1. Verified fact data and source registry.
-2. Fact/concept/question-family identity model.
-3. Deterministic question generation and difficulty.
-4. Distractor generation.
-5. Conservative quality validation.
-6. Duplicate/family detection and anti-repetition.
-7. Quiz assembly.
-8. Question Bank contract, manager, population and audit.
-9. Worker integration.
-10. Request-scoped runtime-generation recovery.
+V1's Current Affairs pipeline includes verified fact data, concept/question-family identity, generation, distractor construction, quality validation, deduplication, quiz assembly, Question Bank management, Worker serving and bounded runtime recovery. The detailed category-specific content rules and historical implementation record are maintained in current-affairs-project.md.
 
 The Question Bank's curated records and the client IndexedDB history are separate. The recorded active FREE seed count (29) is a seed snapshot, not the size of the full verified fact dataset.
 
@@ -210,7 +200,7 @@ The repository contains Cloudflare Worker configuration, GitHub Actions Android 
 
 - `.github/workflows/android-debug.yml` supports manual `workflow_dispatch` and automatic pushes to `main` only. A push to a feature/working branch does not automatically start this debug build.
 - `.github/workflows/android-release.yml` supports manual `workflow_dispatch` only. Do not use it for routine documentation validation; it requires release signing secrets and builds production-signed artifacts.
-- To validate this working branch, open **GitHub → Actions → Android Debug APK → Run workflow**, select `docs/project-documentation-realignment` in the branch selector, and start the run. The GitHub connector available in this session can inspect workflow runs but does not expose a workflow-dispatch action, so I have not claimed to start it.
+- To validate this working branch, open **GitHub → Actions → Android Debug APK → Run workflow**, select `v2-development` in the branch selector, and start the run. The GitHub connector available in this session can inspect workflow runs but does not expose a workflow-dispatch action, so I have not claimed to start it.
 - The latest documentation commit has no associated workflow run yet. The documentation-only changes do not alter application source, but the user's requested branch build remains a separate validation step.
 
 Before release:
@@ -315,7 +305,7 @@ V2 supports:
 - Email/password registration and login.
 - Google sign-in.
 
-The Worker/backend must verify Google identity tokens before issuing an application session. Passwords must be stored only using a vetted password-hashing implementation supported by the Workers runtime; exact algorithm/library selection belongs to Phase 1 technical validation. Use revocable, expiring sessions and protect refresh credentials. Enforce authorization on every account-specific route, validate inputs, rate-limit sensitive operations, prevent account enumeration and replay, and never trust client-supplied user IDs, roles, premium flags or score totals.
+The Worker/backend must verify Google identity tokens before issuing an application session. Passwords must be stored only using a vetted password-hashing implementation supported by the Workers runtime; exact algorithm/library selection belongs to the backend technical validation in project.md Stage 7. Use revocable, expiring sessions and protect refresh credentials. Enforce authorization on every account-specific route, validate inputs, rate-limit sensitive operations, prevent account enumeration and replay, and never trust client-supplied user IDs, roles, premium flags or score totals.
 
 The Android client must not contain a shared secret or provider API key. CORS/origin checks are supplementary and do not authenticate a native mobile client. Keep all secrets in Cloudflare secret configuration.
 
