@@ -90,7 +90,7 @@ The UI/UX document owns the detailed experience decisions. Backend/database docu
 
 ## 7. AI and question-content strategy
 
-AI-assisted question generation is a core capability for V2 and must support all appropriate categories. The long-term content goal is a very large, diverse question supply (potentially over one million records), built progressively and only where quality and rights permit.
+AI-assisted question generation is a core capability for V2 and must support all appropriate categories. The long-term content goal is a very large, diverse question supply, built progressively and only where quality, source coverage and rights permit.
 
 Use a multi-source pipeline:
 
