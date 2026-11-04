@@ -16,7 +16,8 @@ It does not replace the specialist documents. Each specialist document owns the 
 
 - V1 is the existing React, TypeScript, Vite and Capacitor application on main. It is a stable reference, not the V2 implementation target.
 - V2 is a native Android application built with Kotlin and Jetpack Compose in this existing repository on v2-development.
-- Cloudflare is the primary backend platform for Daily Quiz & Challenge. Firebase is not the V2 backend direction.
+- Cloudflare is the primary backend and AI platform for Daily Quiz & Challenge. Firebase is not the V2 backend direction.
+- AI-assisted question generation is a core V2 capability across categories and a major content-supply source, but it complements multiple external/curated knowledge sources rather than replacing factual source verification.
 - Preserve V1 source, production Worker routes, provider integrations, AdMob configuration, signing identity and release behavior. Do not merge V2 into main or change V1 production behavior without explicit approval.
 - The product is global. Do not introduce Africa- or Nigeria-only positioning as the overall product identity.
 - V2's approved primary destinations are Home, Explore, Challenges, Rankings and Profile. Quiz, answer feedback, results, authentication, settings and Premium/Store are nested flows, not extra primary tabs.
@@ -35,9 +36,9 @@ The stages below govern the whole V2 production. No other document may create a 
 | 4. Penpot design and prototype | Wireframes, high-fidelity light/dark screens, interaction states and a clickable prototype. | Major flows are reviewed on target Android screen sizes and approved before implementation. |
 | 5. Native Android foundation | Kotlin/Compose project structure, build configuration, theme, reusable components, navigation shell and debug build. | A reproducible V2 debug build and baseline tests pass without disturbing V1. |
 | 6. Native screen implementation | Approved screens and interactions, including quiz, results, profile, challenge, ranking, settings and account UI. | Required states, accessibility and navigation are validated on Android devices. |
-| 7. Cloudflare V2 backend foundation | Versioned API contracts, persistence decision, environment setup, migrations, protected service foundations, security and observability. | Backend contracts and security tests pass; V1 routes remain compatible. |
+| 7. Cloudflare backend and AI content platform | Versioned APIs, D1/persistence decision, Workers AI and AI Gateway evaluation, provider adapters, asynchronous generation/validation pipeline, question-bank ingestion, security and observability. | AI model/provider evaluation, cost/quality controls, source-to-question pipeline and backend contracts pass; V1 routes remain compatible. |
 | 8. Authentication and account integration | Email/password and Google sign-in, verification/recovery, sessions, profile sync and account lifecycle. | End-to-end account flows and authorization tests pass. |
-| 9. Quiz, learning, challenges and rankings | Trusted quiz sessions/scoring, results/history, progress, challenges, achievements and non-cash rankings. | Server-authoritative behavior, abuse controls and product rules pass end-to-end tests. |
+| 9. Quiz, learning, challenges and rankings | Integrate the approved question bank and AI-assisted content pipeline into quiz delivery, with trusted sessions/scoring, results/history, progress, challenges, achievements and non-cash rankings. | Questions are sourced, validated, deduplicated, versioned and served safely; server-authoritative behavior and abuse controls pass end-to-end tests. |
 | 10. Monetization, stabilization and release | Native ads, approved billing/entitlements, security/privacy/accessibility/performance testing and release preparation. | Release and migration checks pass; production rollout requires explicit approval. |
 
 **Sequencing rules**
@@ -68,6 +69,7 @@ These are intentionally unresolved. Do not silently decide them in implementatio
 8. Typography: final typeface and eight-level type hierarchy.
 9. Semantic tokens: warning, disabled and dark-mode success text colours; verify all text contrast combinations.
 10. Brand intro: whether a first-launch brand intro is needed in addition to the system splash and optional tutorial.
+11. AI implementation choices: initial Workers AI model(s), whether/when to add an external model through AI Gateway, evaluation thresholds, human-review scope and generation budgets. AI itself is required; these implementation details remain open.
 
 The UI/UX document owns the detailed experience decisions. Backend/database documents own the security, data and access implications. This register tracks only whether a project-level decision remains open.
 
@@ -85,14 +87,32 @@ The UI/UX document owns the detailed experience decisions. Backend/database docu
 
 The former current-affairs-project.md was a retired standalone document. Its still-relevant Current Affairs decisions are retained in project.md and backend-architecture.md; it is not an active authority and should not be recreated.
 
-## 7. Current Affairs and News Quiz boundary
+## 7. AI and question-content strategy
+
+AI-assisted question generation is a core capability for V2 and must support all appropriate categories. The long-term content goal is a very large, diverse question supply (potentially over one million records), built progressively and only where quality and rights permit.
+
+Use a multi-source pipeline:
+
+**Knowledge providers / curated facts → normalized source records → AI-assisted question drafts → factual and structural validation → duplicate/family checks → approved question bank → quiz serving.**
+
+- AI is a major generation and enrichment source, not the sole authority for truth.
+- Preserve source provenance, fact/concept identity, question-family identity, difficulty, explanation, freshness, content version, validation status and generation/model metadata.
+- Use Workers AI as the first Cloudflare-native inference candidate. Evaluate models rather than locking the product to one model. AI Gateway provides a route to monitor, cache, rate-limit and add other providers if quality, reliability or cost requires it.
+- Generate most content asynchronously in controlled batches; do not make each player's quiz wait for bulk generation. Runtime generation may be a bounded recovery path only after the same validation gates.
+- Generated questions must never enter the serving bank solely because a model returned valid JSON. Factual checks, schema checks, answer/distractor checks, duplicate detection and category-specific freshness/rights rules are required.
+- Keep question-generation prompts, model credentials and provider keys on the backend. The Android app consumes approved questions through versioned APIs.
+- Select models, limits, review thresholds and generation budgets during Stage 7. Integrate the serving pipeline into quiz flows during Stage 9.
+
+The backend document owns the AI service/pipeline design; the database document owns stored question and provenance fields; the commercial document owns AI cost controls. This section records the project-level commitment only.
+
+## 8. Current Affairs and News Quiz boundary
 
 - Current Affairs is a fact-first verified knowledge system with provenance, freshness and question-family/anti-repetition controls.
 - News Quiz / Current Events is a separate live-news product and provider path. NewsData-specific credentials, parsing and generation must remain isolated.
 - The Current Affairs Question Bank and local recent-question history are separate systems.
 - The backend document owns the technical implementation boundary; this project document records only the product distinction.
 
-## 8. Documentation change control
+## 9. Documentation change control
 
 - Keep each decision in its authoritative document. Other documents may link to it and state only the minimum dependency needed for their own domain.
 - Do not duplicate the project roadmap, design tokens, database schema, backend security design or commercial model across documents.
