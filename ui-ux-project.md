@@ -1,24 +1,15 @@
-# Daily Quiz & Challenge — UI/UX Project Blueprint
-## Current Affairs product-architecture checkpoint — 23 September 2026
+# Daily Quiz & Challenge — UI/UX Authority
 
-The future Current Affairs experience is broader than live news. It will cover structured current/general knowledge across **Nigeria, Africa, World, International Organizations, Economy & Business, Geography, Sports, and Science & Technology**. The current V1 UI should continue showing a single Current Affairs category card; the future native redesign may expose these domains/subcategories after the content system is stable.
+**Status:** V2 design direction approved; detailed design work is the next project milestone.
+**Design workspace:** Penpot (active); Figma is reference/backup only.
 
-A separate future **News Quiz / Current Events** experience may use NewsData.io or another news provider for actual recent-news questions. It must remain a separate product experience and provider path rather than being mixed into Current Affairs.
+This document is the sole authority for V2 brand identity, visual tokens, typography, information architecture, navigation UX, screens, components, interaction states, accessibility and design/prototype decisions. The production sequence is owned by project.md. Android implementation is owned by v2-native-architecture.md.
 
-
-**File purpose:** Dedicated design workspace for the future UI/UX redesign.  
-**Important:** This file is separate from the main `project.md`. The main `project.md` remains the concise source of truth for app development status.
+Historical V1 notes are retained only where they explain a design constraint; they do not override the approved V2 direction.
 
 ## 1. Design Project Status
 
-**Current phase:** V2 brand and native UI/UX design planning. V1 is stabilized and remains the reference implementation; the full redesign belongs to the native Kotlin/Jetpack Compose application on `v2-development`, not the React/Vite/Capacitor V1 codebase.
-
-The approved next milestone is to finalize the Royal Navy-led brand identity, app icon/adaptive icon and splash direction; complete the light/dark design system and restrained premium background language; map navigation and user journeys; and design the complete screen inventory in Penpot. Sign-in and registration screens are included in this early design work, while real email/password and Google authentication integration follows the native UI foundation. Keep this file synchronized with `project.md` and `v2-native-architecture.md` at major checkpoints.
-
-This file is the primary UI/UX blueprint for the native V2 redesign. Historical V1 checkpoints below are retained for continuity and do not override the current V2 direction.
-
-### V1 checkpoint — 22 September 2026
-The redesign is intentionally deferred while the current V1 is completed. The current React/Vite/Capacitor UI remains the working validation interface. Discussion of a future native Android foundation, new product/company branding, and expanded learning-platform navigation is planning only; none should trigger a production UI rewrite yet. After Bible and Current Affairs are working, a full V1 stability pass will precede the major UI/UX implementation.
+V2 is a native Kotlin/Jetpack Compose product. The approved next design work is Brand & Foundations, followed by user journeys, Penpot wireframes, high-fidelity light/dark designs and a clickable prototype. Account screens are designed with the UI; live authentication integration follows the native UI foundation and screen implementation.
 
 ## 2. Product Vision
 
@@ -129,18 +120,23 @@ Create an original Daily Quiz & Challenge expression of the Ricven identity usin
 
 ### Supporting semantic colours
 
-| Token | Hex |
+| Token | Hex / status |
 |---|---|
 | Success | `#22A06B` |
-| Success Text | `#167A4C` |
+| Success Text (light) | `#167A4C` |
 | Error | `#C93B3B` |
-| Dark Error | `#FFB4AB` |
+| Error Text (dark) | `#FFB4AB` |
+| Warning | To be defined and contrast-tested |
+| Disabled | To be defined for light and dark |
+| Success Text (dark) | To be defined and contrast-tested |
 
 ### Usage and accessibility rules
 
 - Keep the brand primitives consistent in light and dark themes; adapt surfaces and text using the tokens above.
-- Gold is an achievement/reward accent, not a routine navigation or generic action colour.
+- Gold is an achievement accent only; do not use it for routine navigation, generic actions or ordinary body text.
 - Cyan and Blue carry interaction, selection and progress emphasis. Avoid making every element bright.
+- Until measured contrast proves otherwise, use Cyan and Gold as non-text accents on light surfaces; do not use either as small text on white.
+- Define warning, disabled and dark-mode success-text tokens before high-fidelity design is signed off.
 - Never rely on colour alone for correct/incorrect states; pair colour with iconography and explicit labels.
 - Validate contrast, text scaling and touch targets on actual Android screen sizes.
 - The former experimental palette is superseded and must not override these exact shared brand tokens.
@@ -156,7 +152,7 @@ Typography must feel:
 - Comfortable on smaller phone screens
 - Consistent across all screens
 
-Typography selection and exact type scale will be finalized in the V2 visual-identity phase and documented as reusable native theme tokens.
+No typeface has been approved yet. Evaluate two suitable candidates, then choose one and define the full eight-level hierarchy as reusable tokens. Do not imply that a typeface is already selected.
 
 Typography hierarchy should distinguish:
 
@@ -563,92 +559,37 @@ If the connection disappears:
 
 Avoid exposing raw technical errors to normal users.
 
-## 18. Navigation
-### Future native Android navigation decision
+## 18. Navigation and information architecture
 
-The current React/Vite/Capacitor V1 UI is **not** the target implementation for the final app-wide navigation structure.
+The approved V2 primary navigation has exactly five destinations:
 
-The future navigation architecture will be designed as an independent product/UX blueprint and implemented during the planned native Android migration. The current V1 remains stable and should not be reshaped into the future multi-section application merely to accommodate Bible.
+1. **Home** — dashboard, progress overview, quick actions and a Daily Challenge entry card.
+2. **Explore** — category, subject and topic discovery, including the proposed home for Bible unless the UX review selects another nested entry.
+3. **Challenges** — daily and special challenges, participation and challenge history.
+4. **Rankings** — leaderboard and competitive progress.
+5. **Profile** — account, personal history, statistics, achievements and settings entry points.
 
-The future navigation design should support:
-- Clear top-level product destinations.
-- Nested navigation inside major sections such as Bible.
-- Predictable back/up behavior.
-- Independent navigation history where appropriate.
-- Scalable support for future account, progress, premium, settings and learning features.
-- Bible-specific hierarchy without turning every Bible function into a top-level button.
+Quiz, answer feedback, results, authentication, settings, Premium/Store, category/topic details and achievement details are nested flows, not primary tabs. Premium/Store must not become a sixth destination.
 
-Android's Navigation component supports navigation graphs, nested destinations, back stacks, and common patterns such as bottom navigation and navigation drawers; these patterns should inform the future native design without preselecting the final UI before wireframing. citeturn0search0
+### Navigation behavior
 
-### Bible information architecture — future design
+- Use a persistent five-destination app shell outside focused task flows.
+- Preserve appropriate tab state/back stacks when switching destinations.
+- Define Back/Up, deep links, process restoration and authentication gates.
+- Keep active quiz play focused. **Proposal for approval:** hide the bottom navigation while a quiz is active.
+- Every major flow needs primary, loading, empty, error and relevant offline states in light and dark themes.
+- Public browsing and guest quiz permissions remain subject to the guest-access decision.
+- Answer feedback must communicate correctness with text, icons and shape/state treatment; colour is never the only signal.
 
-Bible should be treated as a major product section rather than a single quiz-category screen.
+### Open UX decisions — do not assume
 
-Conceptual hierarchy:
-- Bible Home
-  - Read Bible
-    - Old Testament / New Testament
-    - Book
-    - Chapter
-    - Bible Reader
-      - Silent reading by default
-      - User-selected Listen action
-      - Play
-      - Pause / Resume
-      - Stop
-      - Future speed/voice controls
-  - Bible Quiz
-    - Quick Quiz
-    - Book Quiz
-    - Chapter Quiz
-    - Topic Quiz
-  - Future study tools
-
-**Voice reading must never auto-start when a chapter opens.** The reader opens in normal silent-reading mode. Audio begins only after the user explicitly chooses the listening action.
-
-### V1 Bible placeholder UX
-
-Until the native Bible experience is implemented, the current V1 Bible category should use a minimal, non-final placeholder such as:
-
-**Bible — Coming Soon**
-> A full Bible reading, study and quiz experience is being prepared for a future version of the app.
-
-The placeholder should not expose a large collection of temporary buttons such as Read, Read Aloud, Study, Books, Chapters, etc. Those belong to the future navigation design.
-
-
-
-Navigation should be simple and predictable, but the final architecture must support both quick quiz play and the deeper Bible reading experience.
-
-We will decide during UX architecture whether the final product needs:
-
-- Bottom navigation
-- Top navigation
-- Contextual back buttons
-- Profile/settings access
-- Home/category/game/result flow
-
-Navigation must not compete with the quiz itself.
-
-### Product information architecture direction
-
-```text
-DAILY QUIZ & CHALLENGE
-│
-├── Home
-├── Quizzes
-│   ├── General Knowledge
-│   ├── Science
-│   ├── Africa & Nigeria
-│   ├── Current Affairs
-│   └── Bible Quiz
-├── Bible
-│   ├── Read Bible
-│   └── Bible Quiz
-├── Results / Progress
-└── Settings
-```
-
-This is an architecture direction, not a locked visual navigation implementation.
+1. Can guests play quizzes, and which actions trigger sign-in?
+2. Is Bible nested inside Explore, and what is its entry and navigation hierarchy?
+3. How does the Home Daily Challenge card relate to the Challenges destination, schedule and participation history?
+4. Does News Quiz appear in V2, and if so, where is its entry point?
+5. Confirm whether the bottom bar is hidden during an active quiz.
+6. Are Rankings global, country-based, friends-based or a combination? What public profile fields are shown?
+7. Confirm the exact Premium/Store placement; Profile and contextual entry points remain proposals until approved.
 
 ## 19. Component Design System
 
@@ -747,81 +688,15 @@ Requirements:
 - Avoid excessive motion
 - Maintain usable layouts on smaller screens
 
-## 23. UX Architecture Workflow
+## 23. Design workflow and handoff
 
-### Phase 1 — Product/UX Architecture
-First map the complete product journey using the now-known category/provider capabilities. Do not finalize visual navigation before the Africa & Nigeria, Current Affairs and Bible architecture is sufficiently understood.
+Follow the single project sequence in project.md. Within the design work, use this handoff:
 
-Define:
+**Product journeys → Penpot wireframes → high-fidelity light/dark designs → clickable prototype → device review/refinement → approved Compose implementation.**
 
-- Entry
-- Home
-- Category
-- Configuration
-- Ad transition
-- Quiz
-- Answer feedback
-- Results
-- Replay/next category
-- Streaks
-- Profile/statistics
-- Settings
-- Error/retry paths
+Penpot is the editable design source. Record approved frames, interactions, tokens and acceptance criteria here. Do not create a second numbered production roadmap in this document.
 
-### Phase 2 — Visual Identity
-Lock and document:
-
-- Royal Navy (`#0B2970`) as the brand anchor
-- Blue, Electric Cyan and Warm Gold accents
-- Light and dark surface/text tokens
-- Typography and type scale
-- App icon, logo mark and Android adaptive icon
-- Native splash and first-launch brand intro
-- Icon style, card style, spacing, shadows/elevation, corner radius and component rules
-- Subtle premium background treatments and accessibility/performance limits
-
-### Phase 3 — Wireframes
-Design the complete native V2 screen inventory and journeys in Penpot, including account screens, before detailed implementation. Use the agreed design tokens while exploring hierarchy and layout.
-
-Focus on:
-
-- Hierarchy
-- Flow
-- Information placement
-- Navigation
-- Usability
-
-### Phase 4 — High-Fidelity Design
-Apply the final design system.
-
-### Phase 5 — Interactive Prototype
-Connect the screens into a tappable prototype.
-
-Target workflow:
-
-**Design → prototype → test on Oppo A56 → refine**
-
-### Phase 6 — Implementation
-Only after the design is approved:
-
-**Approved Penpot design specification → Kotlin/Jetpack Compose native Android → Debug APK**
-
-### Phase 7 — Regression Testing
-After implementation, verify that the redesign did not break:
-
-- Online questions
-- Question history/anti-repetition behaviour
-- Timer
-- Scoring
-- Streaks
-- AdMob banner
-- AdMob interstitial
-- Rewarded ads
-- App Open ads
-- Loading/error states
-- Release updates/install behaviour
-
-## 24. Penpot Workflow (Active) 
+## 24. Penpot Workflow
 
 Penpot is the active editable design/prototyping environment for Daily Quiz & Challenge V2. Figma may be used as a secondary reference or backup, but it is not the primary design workspace.
 
@@ -852,7 +727,7 @@ The current stable app is valuable.
 
 The redesign should be developed from a known-good functional checkpoint so visual changes can be separated from functional debugging. Do not redesign only the current five-card screen and then retrofit Bible; design the final information architecture around the complete product.
 
-The existing main `project.md` remains the source of truth for app-development status.
+The project roadmap and overall production status are governed by project.md.
 
 ## 27. Current UI/UX Milestone
 
@@ -874,8 +749,7 @@ Completed:
 
 Not yet started:
 
-- Final typography and detailed token values
-- Final typography
+- Final typeface and detailed token values
 - Wireframes
 - High-fidelity native V2 screens
 - Interactive Penpot prototype
@@ -939,202 +813,31 @@ The design system must therefore be built for **long-term scalability**, not jus
 
 **Design first. Code second. Test everything. Protect the stable foundation.**
 
-## Phase 3G UX alignment — 24 September 2026
+## Historical V1 Current Affairs UX constraints
 
-The Current Affairs Quiz Assembler establishes the functional rules that the future UI/UX must represent clearly: a standard 10-question session, balanced difficulty, varied content, no same-family repeats, recent-question avoidance, and a clear insufficient-content/error state when a safe full quiz cannot be assembled.
+The V1 Current Affairs work established durable UX requirements that remain relevant to V2:
 
-These are backend/content-selection constraints, not visual decisions. The major UI redesign remains deferred until the functional V1 foundation is stable.
+- Serve complete quiz sessions through the backend rather than requesting separate difficulty batches from the client.
+- Present clear unavailable, insufficient-content, network/provider failure and retry states.
+- Keep internal fact IDs, question-family IDs, source IDs, generator metadata and lifecycle details out of normal gameplay.
+- Surface explanations and source attribution after answers where useful.
+- Keep Current Affairs fact-first and separate from the News Quiz live-news experience.
 
-## Current Affairs Question Bank checkpoint — 24 September 2026
+The V1 implementation and its historical engineering checkpoints are documented in backend-architecture.md. They do not define a separate V2 design roadmap.
 
-The Current Affairs architecture now includes a dedicated Question Bank as a planned content layer, but **the persistent Question Bank storage/management implementation is not yet complete**.
+## V2 navigation and account decisions
 
-The future UI should consume curated validated question records, not generated drafts or user history. Question records will retain stable identity, family/concept relationships, difficulty, explanations, provenance-aware metadata and future FREE/PREMIUM/SPECIAL_PACK access metadata.
+The five primary destinations, account journey and nested screen inventory above govern the V2 design. Public browsing may be available without an account; personal history, synchronized progress and protected actions require sign-in, subject to the guest-access decision in project.md.
 
-Worker integration is intentionally postponed until the Question Bank layer is implemented and audited. No UI redesign is required for this backend checkpoint.
+V2 supports email/password and Google sign-in. Design registration, sign-in, verification, recovery and account-management screens early; real authentication integration follows the native UI foundation.
 
-## Current Affairs Phase 3H UI/UX architecture checkpoint — 24 September 2026
+## V2 brand and native UI implementation direction
 
-Phase 3H Question Bank Storage & Management is complete through 3H-E. The UI/UX layer remains intentionally decoupled from Question Bank storage and generation.
+- Reuse the shared Royal Navy, Blue, Electric Cyan and Warm Gold brand primitives.
+- Complete light/dark semantic tokens, typography, spacing, shapes, elevation and reusable components before hi-fi sign-off.
+- Keep premium background treatments restrained, readable and performant.
+- Design the optional/skippable first-launch tutorial without making it a mandatory welcome barrier.
+- Keep Home available during auth, ads, remote configuration and network failures.
+- Preserve V1 source, package/signing identity, production Worker routes and release behavior.
 
-The future Current Affairs experience can therefore consume a clean serving layer without exposing internal fact IDs, source records, generator metadata or Question Bank lifecycle details to users.
-
-UI/UX implications preserved for later implementation:
-- Quiz screens receive playable question records only.
-- Access-tier metadata can later support free/premium/special-pack presentation without hard-coding billing into question components.
-- Explanations and future source attribution can be surfaced after answers where appropriate.
-- Dynamic/current facts may require clear date/context presentation in the final question or explanation.
-- Loading, empty-bank, insufficient-question, stale-content and network/error states should be designed before Worker integration is exposed to users.
-- The existing UI redesign remains deferred until the functional Current Affairs pipeline is stable.
-
-**Phase 3H status: complete. Next functional stage: Worker integration, then debug/end-to-end testing.**
-
-
-## Current Affairs Phase 3I-A / 3I-B UX alignment checkpoint — 24 September 2026
-
-The Current Affairs backend now has a real Worker serving boundary and a bounded Question Bank seed.
-
-The future UI should treat the Worker as the source of a complete quiz session rather than requesting individual difficulty groups independently. This preserves global family, concept, recent-history and difficulty rules.
-
-The UI must handle these backend states cleanly:
-- complete 10-question response;
-- no eligible questions after recent-history filtering;
-- Question Bank not populated/temporarily unavailable;
-- invalid or failed Worker response;
-- network failure;
-- future premium/special-pack access restrictions.
-
-No internal Question Bank IDs, family IDs, source IDs, generator versions or lifecycle metadata should be shown during normal gameplay.
-
-The major UI redesign remains deferred. The next UI-relevant work is end-to-end debug testing of the existing app against the real Current Affairs Worker path.
-
-
-## Current Affairs implementation-complete checkpoint — 24 September 2026
-
-The V1 **Current Affairs category implementation is now complete for the current stabilization milestone**.
-
-Completed implementation chain:
-- Verified fact-first Current Affairs knowledge base and source/provenance model.
-- Phase 3A–3H question model, blueprints, generation, distractors, quality validation, duplicate/family detection, quiz assembly, and Question Bank management.
-- Phase 3I Worker integration and version-controlled serving Question Bank.
-- Phase 3J runtime generation/coverage path for recovery when recent-history filtering exhausts the seeded bank.
-- Current Affairs remains isolated from NewsData; NewsData is reserved for the future News Quiz / Current Events product.
-- Recent-history exhaustion testing successfully returned a complete 10-question quiz without re-serving the 20 supplied recent-history IDs.
-- Runtime exhaustion recovery is therefore considered functionally established for this V1 milestone.
-- The preferred 4 Easy / 4 Medium / 2 Hard distribution may relax when the available eligible pool is constrained by recent-history/exhaustion rules; anti-repeat protections remain in force.
-- Known Question Bank explanation/content cleanup items observed during testing are recorded as a later cleanup task and are **not** being changed in this checkpoint.
-
-### Next controlled release steps
-
-1. Merge the completed Current Affairs implementation pull request into `main`.
-2. Confirm the merged `main` state and production Worker deployment.
-3. Build the Android **Debug APK** from the merged state.
-4. Install/update the Debug APK on the test phone.
-5. Run end-to-end V1 category testing, with Current Affairs included, while protecting the already-confirmed Science, General Knowledge, Africa & Nigeria and AdMob behavior.
-6. Record any findings as stabilization fixes only; do not begin the major native Android/UI redesign during this test cycle.
-
-**Current milestone:** Current Affairs implementation complete → PR merge → Debug APK validation → V1 stabilization.
-
-
-## V1 stabilization complete — 24 September 2026
-
-The V1 functional reference app is now officially stabilized. The current React/Vite/Capacitor interface should be treated as a **frozen reference baseline** rather than the target for the major redesign.
-
-The next product-design phase moves to the separate native Android V2 architecture. Future app-wide navigation, the full Bible experience, major UI/UX redesign, design-system implementation, and native Android interaction patterns should be designed for V2 rather than retrofitted into V1.
-
-The V1 AdMob behavior must be preserved as a functional reference during the V2 migration: Debug uses test ads, release uses production AdMob IDs, and ad containers/presentation must remain regression-tested in the native implementation.
-
-**V1 UI/UX status: STABILIZED REFERENCE.**
-
-**Next milestone: Native Android V2 product architecture and UX design.**
-
-
-## 29. Ricven alignment and design workflow
-
-### Penpot + Claude
-
-- **Penpot is the active design workspace** for wireframes, screen layouts, reusable components, prototypes and design-system exploration.
-- **Claude is an AI-assisted collaborator** for design exploration, flow review, specification refinement and implementation guidance.
-- Penpot remains the editable visual source for approved designs. Keep approved requirements, design decisions, component behaviour and implementation status recorded in this repository.
-- Claude-generated suggestions are proposals until reviewed and accepted; never silently convert them into confirmed product decisions.
-- Figma may remain a secondary reference, but Penpot is the active primary design tool.
-- Review every proposed design against the current product architecture and exact shared palette before implementation.
-
-### Premium redesign — five experience pillars
-
-1. **Upgraded Home Dashboard:** clear Daily Challenge entry, streak/progress summary, category discovery, useful quick actions and meaningful return-user context.
-2. **Immersive Quiz Experience:** focused question canvas, clear progress/timer hierarchy, comfortable answer targets, accessible feedback, subtle transitions and robust loading/network/error states.
-3. **Achievements & Competition:** points, streak milestones, badges, trophies, personal bests, challenges and leaderboards. Early competition should be non-cash.
-4. **Better Category Experiences:** dedicated category landing pages, useful subtopic discovery, category context and clear availability/access states within one shared component system.
-5. **Learning & Performance Centre:** quiz history, accuracy/topic trends, difficulty/category breakdowns, strengths, improvement areas and actionable practice recommendations. Distinguish local V1 metrics from future account-synced analytics.
-
-These five pillars are design targets, not a statement that all features are implemented in V1.
-
-### Design-to-implementation acceptance
-
-Before implementation, each major flow should include Penpot frames for primary, empty, loading, error and relevant offline states; a component inventory and interaction specification; light/dark token mapping; compact and large-screen checks; accessibility checks; and a traceable link to the corresponding repository requirement.
-
-
-## V2 native navigation and account decisions — 3 November 2026
-
-**Status: approved information architecture; detailed wireframes and visual specifications remain to be designed.**
-
-The native Android V2 application will use five persistent primary navigation destinations:
-
-1. **Home** — dashboard, Daily Challenge entry, streak/progress overview and quick actions.
-2. **Explore** — categories, subjects, topics, content discovery and quiz configuration.
-3. **Challenges** — daily and special challenges, participation and challenge history.
-4. **Rankings** — leaderboards, rankings and competitive progress.
-5. **Profile** — account/profile, personal quiz history, statistics, achievements and settings entry points.
-
-Use a persistent bottom navigation bar for these five top-level destinations. Do not add quiz, results, category detail, authentication, settings or achievement detail as additional primary tabs. Those are nested destinations within the relevant section or app-level flows.
-
-### Navigation behavior requirements
-
-- Each top-level destination should retain appropriate navigation state/back stack when users switch tabs.
-- Define clear Back and Up behavior, including from nested flows and authentication.
-- Support deep links into eligible destinations without bypassing authentication/authorization.
-- Preserve navigation and quiz state through configuration changes and process recreation where appropriate.
-- Show clear selected/unselected states and accessible labels for every destination.
-- Provide loading, empty, offline, error and retry states.
-- Authentication, registration, sign-in and recovery are flows, not bottom navigation destinations.
-- Public browsing may be available without an account; personal history, synchronized progress and protected actions require sign-in.
-
-### Account entry and authentication UX
-
-V2 will support both **email/password** and **Google sign-in**. Design the account journey to cover:
-- Sign up and sign in.
-- Google identity-provider handoff and return.
-- Email verification where required.
-- Password recovery/reset.
-- Session expiry, re-authentication and sign-out.
-- Profile editing and preferences.
-- Account deletion and clear privacy/data-retention information.
-- Understandable offline, provider failure and retry states.
-
-Do not imply that a user is authenticated merely because a Google account chooser completed. The trusted backend must verify the identity and issue the application session.
-
-### Screen inventory to wireframe
-
-In addition to the five tab roots, plan nested screens for category/topic detail, quiz setup, active quiz, answer feedback, results, quiz history, challenge detail/participation, leaderboard detail, achievement detail, profile edit, settings, sign-in, registration, verification and recovery.
-
-### Visual design constraints
-
-Continue using the approved shared Ricven/RichInsights palette, with **Royal Navy** (`#0B2970`) as the brand anchor. The five-tab structure is approved. Final icon, typography, splash, adaptive icon, light/dark theme, component dimensions, subtle background treatments, responsive behavior and screen compositions must be designed and reviewed in Penpot before native implementation.
-
-## V2 brand and native UI implementation plan — 4 November 2026
-
-**Status:** Approved direction and implementation sequence; no claim that assets, Penpot screens or native Compose code are already complete.
-
-### Brand identity and Android launch assets
-- Create a distinctive app icon and matching logo/brand mark that work at small sizes and across light/dark contexts.
-- Produce Android adaptive icon foreground/background assets and verify launcher masking at common shapes.
-- Specify the native Android system splash using the approved brand mark and Royal Navy-led background.
-- Define a short first-launch-only brand intro if needed, with mark, app name and tagline; it must be skippable and must not delay Home or depend on network/auth initialization.
-
-### Design system
-- Royal Navy `#0B2970` is the correct name for the brand anchor. Do not call it Deep Navy.
-- Retain Blue `#1769E0`, Electric Cyan `#19B5FE` and Warm Gold `#F4B942` with the restrained usage rules above.
-- Define semantic colors, light/dark surfaces, typography, spacing, shape, border, elevation and component tokens once, then reuse them throughout Compose.
-- Define a small, consistent elevation scale: soft shadows for separation, not heavy floating-card effects.
-
-### Premium background visual language
-- Use subtle ambient glow or soft radial lighting only where it supports hierarchy (for example, a Home hero, challenge highlight or selected header region).
-- Use low-contrast abstract geometry, fine tonal texture or barely visible patterns sparingly; avoid repeating decoration on every card.
-- Light theme should remain bright, crisp and breathable; dark theme may use soft Royal Navy/Blue tonal depth with restrained Cyan highlights.
-- Prefer layered tonal surfaces and carefully controlled edge/shadow treatment over loud multi-stop gradients, neon glow, excessive blur, glassmorphism or busy illustrations.
-- Keep content, controls and text dominant. Background decoration must never reduce contrast, legibility, touch clarity or performance.
-
-### Navigation, onboarding and account screens
-- Implement five persistent destinations: Home, Explore, Challenges, Rankings and Profile, with nested destinations and predictable Back/Up behavior.
-- Design authentication as separate flows, not bottom-navigation tabs. Sign-in, registration, Google handoff, verification and recovery screens are included in the early Penpot design package.
-- Add a short optional, skippable first-launch tutorial only if it improves discovery. It is an overlay/sequence that can be skipped and revisited from Help/Settings if appropriate, not a mandatory standalone welcome screen.
-- Do not gate Home behind the tutorial, login, remote configuration, ads or network availability. Guest browsing remains subject to the product decision on which public features can be used without an account.
-
-### Design and implementation acceptance
-- Penpot is the active design source; Figma is secondary reference only.
-- Each major flow must include primary, loading, empty, error and relevant offline states, plus light/dark variants where applicable.
-- Approve icon/splash assets, tokens, screen layouts, interactions, accessibility checks and responsive behavior before corresponding Compose implementation.
-- Login/registration UI is designed early; real email/password and Google sign-in integration comes later, after the native UI foundation and screens are in place.
-- Keep V1 source, package/signing identity, production Worker routes and release behavior untouched.
-
+**Design acceptance:** approved Penpot source, complete primary/nested flows, light/dark states, accessibility review, and prototype review on target Android screen sizes.
