@@ -1,51 +1,47 @@
 # Daily Quiz & Challenge
 
-A global quiz and learning app under the Ricven brand. V1 is the existing React, TypeScript, Vite and Capacitor Android application; native Android V2 is being planned and developed separately with Kotlin and Jetpack Compose.
+A global quiz and learning product under the Ricven brand. V1 is the existing React/TypeScript/Vite/Capacitor application. V2 is the native Android product built with Kotlin and Jetpack Compose.
 
-## Product
+## Product and platform
 
-Daily Quiz & Challenge is developed under the Ricven brand. Its product direction combines daily quizzes, multiple knowledge categories, engaging gameplay, achievements and a longer-term learning/performance experience.
+- **V1:** existing production app; preserve its source, signing, Worker routes and release behavior.
+- **V2:** native Android, developed on `v2-development`; do not merge into V1 `main` without explicit approval.
+- **Backend:** Cloudflare Workers. Cloudflare is also the planned AI platform for V2 question generation.
+- **V2 AI:** Workers AI is the first inference option to evaluate; AI Gateway/provider routing may be added where quality, reliability, observability or cost requires it. AI-generated questions must be grounded, validated and approved before serving.
+- **Design:** Penpot is the active design workspace.
 
-## Current technology
+## Current V1 technology
 
-- React 19
-- TypeScript 5.7
-- Vite 6
-- Capacitor Android 8.4.2
-- Cloudflare Workers backend intermediary
-- IndexedDB for local recent-question history
-- localStorage for lightweight local streak/best-score state
-- AdMob for the current V1 advertising integration
+React 19 · TypeScript 5.7 · Vite 6 · Capacitor Android 8.4.2 · Cloudflare Workers · IndexedDB · localStorage · AdMob.
 
-Android application ID: `com.richard.dailyquizchallenge`  
-Package version in `package.json`: `1.1.9`.
+Android application ID: `com.richard.dailyquizchallenge`.
 
-## Backend
+## Cloudflare Worker
 
-Worker configuration: `wrangler.toml`
-
-- Worker name: `daily-quiz-intermidiary`
+- Worker: `daily-quiz-intermidiary`
 - Entry point: `worker/index.js`
 - Base URL: `https://daily-quiz-intermidiary.richardoha25.workers.dev`
 
-The Worker integrates Open Trivia DB (General Knowledge and Science), Africa API (Africa & Nigeria), the fact-first Current Affairs implementation and a separate News Quiz route using NewsData.io.
+The V1 Worker integrates Open Trivia DB (General Knowledge and Science), Africa API (Africa & Nigeria), fact-first Current Affairs and a separate News Quiz route using NewsData.io. Current V1 configuration has no D1/KV/R2 binding. Do not infer that V2 database or AI services are already deployed.
 
-**Cloudflare Workers are the backend platform for this product.** No Cloudflare D1/KV/R2 database binding is currently configured. Current Affairs seed data is version-controlled JavaScript and runtime fallback generation is request-scoped.
+Secrets such as `AFRICA_API_KEY` and `NEWSDATA_API_KEY` belong in Cloudflare secret configuration, never in source control. Keep News Quiz credentials and code separate from Current Affairs.
 
-See [backend-architecture.md](backend-architecture.md) for the verified architecture, security boundaries, current limitations and future hardening plan.
+## Documentation — eight active documents
 
-## Documentation
+| Document | Authority |
+|---|---|
+| [project.md](project.md) | Product boundaries, V2 roadmap, stages, milestones and project-level open decisions. |
+| [ui-ux-project.md](ui-ux-project.md) | Brand, design tokens, navigation UX, screens, components, accessibility and Penpot decisions. |
+| [v2-native-architecture.md](v2-native-architecture.md) | Kotlin/Compose app architecture, client state, navigation implementation and Android integrations. |
+| [backend-architecture.md](backend-architecture.md) | Cloudflare services, APIs, AI generation pipeline, security, scoring trust and operations. |
+| [database-architecture-v2.md](database-architecture-v2.md) | V2 schema, question provenance, validation metadata, relationships and data integrity. |
+| [current-affairs-project.md](current-affairs-project.md) | Current Affairs sources, fact model, freshness, question families and category-specific quality rules. |
+| [commercial-monetization.md](commercial-monetization.md) | Ads, Premium, Store, billing, entitlements, licensing and AI-generation economics. |
+| [README.md](README.md) | Repository overview and links to the authoritative documents. |
 
-- [Project roadmap and continuity record](project.md)
-- [UI/UX blueprint](ui-ux-project.md)
-- [Current Affairs architecture and content system](current-affairs-project.md)
-- [Backend architecture and security](backend-architecture.md)
-- [Native Android V2 architecture and phased roadmap](v2-native-architecture.md)
-- [Commercial and monetization plan](commercial-monetization.md)
+Each subject has one authority. The other documents reference it rather than duplicating its detailed specification. The overall production sequence exists only in `project.md`.
 
-The active design workflow uses **Penpot** as the design/prototyping workspace and **Claude** as an AI-assisted collaborator. Approved decisions must be recorded in project documentation.
-
-## Local development
+## Local V1 development
 
 ```bash
 npm install
@@ -55,26 +51,8 @@ npx cap sync android
 npm run android:debug
 ```
 
-The Android build requires the appropriate Java/Android SDK environment.
+The Android build requires a suitable Java and Android SDK environment.
 
-## Cloudflare secrets
+## V2 product boundaries
 
-The Worker expects secrets declared in `wrangler.toml`, including:
-- `AFRICA_API_KEY`
-- `NEWSDATA_API_KEY` (separate News Quiz provider path)
-
-Configure secret values through Cloudflare's secret-management workflow. Never commit secret values, API tokens, signing keystores or passwords.
-
-## Product boundaries
-
-- The current React/Vite/Capacitor application is the V1 reference; future native redesign plans are not completed implementation.
-- Bible remains a future product experience/V1 placeholder.
-- Google Play Billing, subscriptions, Remove Ads purchases and premium entitlement enforcement are planned, not implemented.
-- Preserve existing production signing and AdMob configuration during Android build changes.
-
-
-## Native Android V2
-
-V2 is developed on the separate `v2-development` branch, based on the documentation alignment branch. Its approved direction is Kotlin + Jetpack Compose with five primary destinations (Home, Explore, Challenges, Rankings and Profile), email/password and Google sign-in, and Cloudflare as the primary backend platform.
-
-V2 planning and implementation do not modify or merge into the stable V1 `main` branch. See [v2-native-architecture.md](v2-native-architecture.md) for the target architecture, security boundaries, phase plan and acceptance criteria. V2 features described there are planned unless explicitly marked implemented.
+V2's five primary destinations are Home, Explore, Challenges, Rankings and Profile. Authentication supports email/password and Google sign-in. Bible, News Quiz, monetization and other nested experiences remain subject to their respective design and product decisions. Features described as planned are not implemented until verified in code and deployment.
