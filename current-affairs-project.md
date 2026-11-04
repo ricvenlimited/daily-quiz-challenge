@@ -221,7 +221,7 @@ Recommended fields:
 
 For changing facts, update or supersede the **fact record**, rather than manually editing hundreds of questions.
 
-## 5. Source registry — Phase 1
+## 5. Source registry
 
 ### Tier 1: official/primary sources
 
@@ -239,7 +239,7 @@ For changing facts, update or supersede the **fact record**, rather than manuall
 | Economy | IMF WEO/data | macroeconomic indicators and projections | approved with dataset vintage |
 | International | WHO / UNESCO / UNICEF / WTO / OPEC / NATO / Commonwealth official sources | organization-specific facts | research/verify before ingestion |
 
-### Verified Phase 1 sources
+### Initial verified source examples
 
 **INEC:** its official State Offices directory identifies 36 states + FCT (37 offices), 774 LGA offices, capitals and geopolitical-zone groupings. citeturn0search0
 
@@ -461,7 +461,7 @@ News Quiz remains separate: AI-generated questions must be grounded in the speci
 
 ## Question-generation architecture
 
-Phase 3 begins only after the Phase 2 fact dataset and the NewsData isolation are complete.
+The question-generation pipeline consumes the verified fact dataset and remains isolated from News Quiz.
 
 ### Core architecture
 
@@ -549,7 +549,7 @@ Generated questions should retain enough metadata to trace them back to verified
 }
 ```
 
-Future access metadata may also support `FREE`, `PREMIUM` and `SPECIAL_PACK`, but entitlement enforcement remains outside Phase 3.
+Future access metadata may also support `FREE`, `PREMIUM` and `SPECIAL_PACK`, but entitlement enforcement remains outside the content-generation pipeline.
 
 ### Distractor generation
 
