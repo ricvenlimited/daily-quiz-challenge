@@ -1,331 +1,124 @@
 # Daily Quiz & Challenge — Native Android V2 Architecture
 
-**Decision date:** 3 November 2026  
-**Status:** Approved architecture direction and Phase 1 planning baseline. This document describes the V2 target architecture; it does not claim that the native application, account system, database bindings or new APIs have been implemented.
+**Status:** Approved target architecture; implementation is not yet claimed complete.
+**Platform:** Native Android · Kotlin · Jetpack Compose
+**Project roadmap:** See [project.md](project.md). This document does not own production phases.
 
-## 1. Product and branch boundaries
+## 1. Scope and branch boundaries
 
-Daily Quiz & Challenge V2 is a major native Android evolution of the existing product. It is not a replacement repository and it must not destabilize V1.
+This document is the authoritative source for the Android client's technical architecture: app structure, Compose implementation, state, navigation implementation, local client data and integration boundaries.
 
-- Repository: `ricvenlimited/daily-quiz-challenge`.
-- V1 stable branch: `main`.
-- Documentation alignment baseline: `docs/project-documentation-realignment`.
-- V2 native development branch: `v2-development`.
-- Existing V1 application ID: `com.richard.dailyquizchallenge`.
-- Existing V1 stack: React, TypeScript, Vite and Capacitor Android 8.4.2.
-- Approved V2 stack: native Android with Kotlin and Jetpack Compose.
-- Primary backend infrastructure: Cloudflare.
-- Product direction: global quiz and learning platform under the Ricven brand.
+- Repository: ricvenlimited/daily-quiz-challenge.
+- V1 stable branch: main. V2 working branch: v2-development.
+- V1 remains the existing React/TypeScript/Vite/Capacitor app. Preserve its code, application identity, signing, AdMob and production behavior.
+- V2 is a native Android client in the existing repository. Do not copy the V1 web UI into the native app.
+- Cloudflare is the backend platform; backend service design belongs to backend-architecture.md.
+- Data entities and persistence schema belong to database-architecture-v2.md.
+- Brand, screen appearance and UX behavior belong to ui-ux-project.md.
+- Commercial behavior belongs to commercial-monetization.md.
 
-The V2 branch was created from `docs/project-documentation-realignment` so it inherits the aligned project, UI/UX, commercial and backend documentation. The V2 branch is the working line for native architecture and implementation. Do not merge V2 into `main during V2 development. Any eventual production migration/release and branch integration require a separate explicit review and approval.
+Do not merge V2 into main or alter V1 production behavior without explicit approval.
 
-Preserve the V1 code, production signing identity, package/application ID, AdMob configuration, working Cloudflare Worker routes, provider integrations and release history. Do not perform a destructive rewrite of V1. Do not copy V1's web UI into the native V2 client.
+## 2. Confirmed Android product constraints
 
-## 2. Confirmed product decisions
+- Native client: Kotlin and Jetpack Compose with Material 3 customized through approved Ricven design tokens.
+- Five primary destinations: Home, Explore, Challenges, Rankings and Profile. The UI/UX document owns their product meaning and detailed behavior.
+- Quiz, answer feedback, results, authentication, settings, Premium/Store and other detail experiences are nested flows, not extra primary destinations.
+- Authentication methods: email/password and Google sign-in. Design the account screens with the UI; integrate live authentication only after the native UI foundation and screens are ready.
+- Penpot is the active design source. Implement only approved designs.
+- V2 must preserve V1 and use separately versioned backend contracts.
 
-| Area | Approved decision |
+## 3. Approved Android technology direction
+
+| Concern | Direction |
 |---|---|
-| Client technology | Native Android |
 | Language | Kotlin |
-| UI toolkit | Jetpack Compose |
-| Primary navigation | Five destinations |
-| Authentication | Email/password and Google sign-in |
-| Backend platform | Cloudflare |
-| Repository | Existing `ricvenlimited/daily-quiz-challenge` |
-| V1 treatment | Preserve `main` as the stable V1 baseline |
-| V2 workflow | Separate `v2-development` branch |
-| Product scope | Global quiz and learning platform |
-
-### Five primary navigation destinations
-
-1. **Home** — dashboard, daily challenge entry, streak/progress overview and quick actions.
-2. **Explore** — categories, subjects, topics, content discovery and quiz setup.
-3. **Challenges** — daily/special challenges, participation and challenge history.
-4. **Rankings** — leaderboards, rankings and competitive progress.
-5. **Profile** — account/profile, personal quiz history, statistics, achievements and settings entry points.
-
-Use a persistent five-destination bottom navigation pattern for the main app shell. Each destination owns its own nested navigation graph/back stack where appropriate. Detail screens such as quiz setup, active quiz, results, category/topic detail, achievement detail, account settings and authentication must not become extra primary tabs. Define selected state, deep-link behavior, back/up behavior, restoration and authentication gates before implementation.
-
-### Account and authentication scope
-
-Support both:
-- Email/password registration and sign-in.
-- Google sign-in.
-
-The account lifecycle must also cover sign-out, session renewal/expiry, password recovery, email verification where required, account/profile updates, account deletion/data-retention policy, and safe handling of provider or network failures. Google sign-in is an identity-provider flow; it must be verified by the trusted backend before an account session is issued. Do not trust a client-supplied user ID, email, role, premium flag or score.
-
-Authentication screens are part of the V2 product flow, not primary bottom-navigation destinations. Users may explore appropriate public content before signing in, but account-dependent actions such as syncing progress, submitting authoritative results, and accessing personal history must require a valid authenticated session.
-
-## 3. Native Android client architecture
-
-### Approved core stack
-
-| Layer | Technology / responsibility |
-|---|---|
-| Programming language | Kotlin |
 | UI | Jetpack Compose |
-| Design system | Material 3, customized with approved Ricven brand tokens |
+| Design foundation | Material 3 + approved app theme/tokens |
 | Navigation | Navigation Compose |
-| Architecture | MVVM with clear UI, domain and data boundaries |
-| State | ViewModel + StateFlow; immutable UI state |
+| Presentation architecture | MVVM with clear UI, domain and data boundaries |
+| UI state | ViewModel + StateFlow; immutable screen state |
 | Async work | Kotlin Coroutines and Flow |
-| Networking | Select Retrofit or Ktor during implementation based on project fit; use one consistent HTTP client |
-| Local relational persistence | Room where offline/cache requirements justify it |
+| Networking | Choose Retrofit or Ktor during implementation; use one consistent HTTP client |
+| Local relational data | Room only where a demonstrated offline/cache need justifies it |
 | Preferences | DataStore |
-| Dependency injection | Select and document a single approach before broad implementation |
+| Dependency injection | Select one approach before broad implementation |
 | Build | Gradle with centralized dependency/version management |
-| Testing | Kotlin unit tests, Compose UI tests, repository/API contract tests and Android instrumentation tests |
-| CI | GitHub Actions with separate V2 debug validation |
+| Tests | Kotlin unit, Compose UI, API/repository contract and Android instrumentation tests |
+| CI | GitHub Actions with a reproducible V2 debug build |
 
-Do not introduce both Retrofit and Ktor, multiple DI frameworks, or redundant persistence libraries. Phase 1/2 must settle exact versions and libraries against current Android compatibility, maintenance and build constraints before implementation.
+Do not introduce competing HTTP clients, multiple DI frameworks or redundant persistence libraries. Record exact dependency versions when implementation begins and verify current Android compatibility.
 
-### Layering
+## 4. Client architecture and responsibilities
+
+Recommended dependency direction:
 
 ```text
 Compose UI / Navigation
-        ↓ user actions, observes state
+        ↓
 ViewModel (StateFlow)
         ↓
-Use cases / domain rules
+Domain use cases
         ↓
 Repository interfaces
         ↓
 Data implementations
    ├── Cloudflare API client
-   ├── Room local data source (when required)
-   └── DataStore preferences
+   ├── Room (only when justified)
+   └── DataStore
 ```
 
-Compose screens should render state and dispatch user actions. They should not directly issue network requests, own business rules, store credentials, or calculate trusted competitive scores. ViewModels coordinate screen state; repositories abstract remote/local data; domain use cases hold reusable application rules.
+- Compose screens render state and dispatch user actions. They do not own business rules or issue ad-hoc network requests.
+- ViewModels coordinate screen state and UI events.
+- Domain use cases contain reusable client-side application rules; they must not be treated as trusted scoring authority.
+- Repositories isolate remote and local data sources.
+- Keep navigation destinations and feature modules cohesive. Avoid premature module fragmentation; introduce modules when ownership or build/test boundaries justify them.
+- Keep credentials and session material out of logs, ordinary preferences and source control. Select secure storage based on the final session design.
 
-## 4. Design system and UI/UX
+## 5. Navigation and lifecycle implementation
 
-Use the approved shared Ricven/RichInsights palette documented in `ui-ux-project.md`, with **Royal Navy** (`#0B2970`) as the brand-anchor name. Do not call this token Deep Navy or invent a competing palette. Preserve accessible contrast, scalable typography, predictable touch targets, light/dark themes and coherent component behavior.
+Implement the approved five-destination shell using Navigation Compose. The UI/UX authority defines the information architecture and interaction rules; this document defines their Android implementation.
 
-The native UI must be designed in Penpot before detailed screen implementation. Brand identity, icon, splash, design tokens, navigation, screen layouts and authentication UI are designed and reviewed before native screen implementation or authentication integration. Approved screens and interaction decisions must be recorded in `ui-ux-project.md`. Build reusable Compose components and theme tokens rather than styling each screen independently.
+- Use nested navigation for detail and task flows.
+- Preserve appropriate tab state/back stacks when switching destinations.
+- Define Back/Up, deep-link and process-restoration behavior.
+- Preserve quiz progress safely across configuration changes and process recreation where required.
+- Handle authentication gates based on backend authorization, not client-only flags.
+- Do not decide unresolved UX questions (such as whether the bottom bar is hidden during an active quiz) in this architecture document.
 
-The five-tab information architecture is approved, but detailed screen layouts, icon choices, tab labels, badges, empty states and transitions remain subject to wireframing and design review.
+## 6. Backend and data integration boundaries
 
-## 5. Cloudflare backend architecture
+The Android client communicates with Cloudflare through documented, versioned HTTPS APIs. It must not connect directly to D1 or call credentialed third-party providers from the app.
 
-Cloudflare remains the primary infrastructure. V2 should extend the existing backend deliberately rather than replacing working provider integrations.
+- API routes, request/response contracts, provider adapters, backend security and server-authoritative scoring are defined in backend-architecture.md.
+- Tables, relationships, indexes, migrations, retention and data integrity are defined in database-architecture-v2.md.
+- The client never supplies authoritative score totals, correctness flags, premium status or user ownership claims.
+- Question delivery must not expose trusted answer keys. The Worker evaluates submitted answers and returns permitted feedback.
+- Use explicit loading, empty, error, offline and retry states. Network failure must not block access to screens or local content that is designed to remain available.
+- Keep V1 API contracts compatible while V2 uses its separately versioned API surface.
 
-### Existing V1 backend facts
+## 7. Quality, accessibility and reliability
 
-- Existing Worker: `daily-quiz-intermidiary`.
-- Existing production base URL: `https://daily-quiz-intermidiary.richardoha25.workers.dev`.
-- Existing routes include `GET /api/health` and `GET /api/questions`.
-- Existing provider/content paths include Open Trivia DB (General Knowledge and Science), Africa API (Africa & Nigeria), fact-first Current Affairs, and a separate News Quiz/NewsData.io route.
-- Existing V1 question response includes `correctAnswer`; V1 local streak/best-score values are device-local.
-- No D1, KV or R2 binding was configured in the backend configuration reviewed on 2 November 2026.
-- No authenticated account/session service or authoritative per-user result ledger was identified in the reviewed V1 Worker.
+- Use the UI/UX authority for required visual and interaction states, contrast, type scaling, touch targets, motion and light/dark behavior.
+- Keep answer feedback understandable without colour alone.
+- Handle lifecycle changes, connectivity loss, timeouts, retries and expired sessions predictably.
+- Avoid blocking Home on authentication, remote configuration, ads or backend initialization.
+- Test navigation, state restoration, offline behavior, screen sizes, accessibility and real-device performance.
+- A reproducible debug APK and passing baseline tests are required before broad feature implementation.
 
-These are current V1 facts, not a description of completed V2 infrastructure. Preserve category-specific provider boundaries, especially the separation between fact-first Current Affairs and News Quiz.
+## 8. V1 compatibility and migration
 
-### Target backend responsibilities
+- Keep V1 operational on main throughout V2 development.
+- Do not assume V1 IndexedDB/localStorage values are trusted account records or safely migratable.
+- Decide whether any legacy local data can be imported only after its integrity and ownership are reviewed.
+- Preserve the existing application ID and signing considerations until package identity, signing continuity, data migration and in-place upgrade compatibility are verified. Do not change package identity by assumption.
+- Evaluate native AdMob integration separately from the existing V1 Capacitor AdMob implementation. The commercial plan belongs to commercial-monetization.md and V2 native ad implementation is governed by project.md Stage 10.
+- Do not remove V1 files or change production Worker behavior as a side effect of Android foundation work.
 
-Cloudflare Workers will provide versioned HTTPS API endpoints for:
-- Identity/authentication integration and session lifecycle.
-- Account/profile management.
-- Category/topic/catalog data.
-- Quiz-session creation and lifecycle.
-- Question delivery and answer submission.
-- Server-authoritative scoring and result persistence.
-- User progress, streaks and achievements.
-- Challenge participation and leaderboard queries.
-- Entitlement/access checks when commercial features are implemented.
-- Abuse controls, validation, audit events and operational health.
+## 9. Change control
 
-### Persistence decision
-
-Cloudflare D1 is the leading relational database candidate for V2 accounts, profiles, quiz sessions, authoritative attempts/results, progress and leaderboard source records because these features need structured relationships and transactional consistency. This is a target recommendation for Phase 1 validation, not a claim that D1 is currently configured or deployed.
-
-Before creating production bindings, Phase 1 must validate current Cloudflare plan limits/pricing, SQLite/D1 transaction and indexing needs, data volume assumptions, migration/backup/restore strategy, privacy and deletion requirements, and environment separation. KV may be considered for suitable ephemeral lookups or rate-limit/session support only where its consistency model fits. R2 is for larger assets/content files, not transactional score updates. Do not add services without a defined requirement.
-
-### API compatibility and evolution
-
-Keep existing V1 endpoints operational while V2 is developed. Define a versioned V2 API contract (for example, a clearly namespaced `/api/v2/...` surface) rather than silently changing existing response contracts. Exact route names and payload schemas must be documented before implementation. Add contract tests and explicit compatibility rules.
-
-The V2 client must not call third-party question providers directly when credentials, normalization, quotas or business rules belong on the Worker. Provider credentials remain server-side Cloudflare secrets.
-
-## 6. Authentication and security requirements
-
-Authentication implementation must be selected after a focused Phase 1 technical review. The design must support email/password and Google sign-in without embedding private secrets in the Android application.
-
-Required security properties:
-- Verify Google identity tokens on the trusted backend using the supported Google verification flow; validate issuer, audience, signature and expiry.
-- Use a vetted password hashing approach suitable for the Cloudflare Workers runtime; never store plaintext or reversibly encrypted passwords. Select and document the exact implementation after runtime/library verification.
-- Use short-lived access credentials and a revocable/rotatable session or refresh-token strategy; store only appropriately protected token representations server-side where applicable.
-- Enforce authorization on every protected Worker route. Authentication alone does not authorize access to another user's records.
-- Validate request schemas, body sizes, field lengths and allowed state transitions.
-- Apply rate limits and abuse controls to registration, login, password recovery, token refresh, quiz creation, answer submission and other sensitive routes.
-- Avoid account enumeration in recovery/login error behavior.
-- Protect against replay, duplicate submission and race conditions using session expiry, idempotency and server-side state checks.
-- Keep secrets in Cloudflare secret configuration; never commit them or bundle them in Vite/Android assets.
-- Use TLS for all network traffic and avoid logging passwords, tokens, full identity assertions or unnecessary personal data.
-- Define privacy notice, consent, retention, account deletion and data export requirements before launch.
-- Test missing/expired/revoked sessions, invalid Google tokens, brute-force/rate-limit behavior, cross-account access and backend outages.
-
-CORS is not mobile-app authentication. A public Android client cannot keep a shared API secret confidential. Origin checks, if used, are supplementary controls only.
-
-## 7. Trusted quiz sessions, scores and competition
-
-V1 exposes correct answers to the client and stores some score/streak values locally. That is a known V1 limitation. V2 must not treat client-calculated scores or client-submitted totals as authoritative for rankings, achievements or valuable rewards.
-
-Target flow:
-
-```text
-Authenticated user
-   ↓
-Worker creates a bounded quiz session
-   ↓
-Worker delivers eligible questions without answer keys
-   ↓
-Client submits an answer for the active question
-   ↓
-Worker validates session, timing, question and submission
-   ↓
-Worker evaluates answer and calculates score
-   ↓
-Worker records authoritative attempt/result
-   ↓
-Progress, streak and eligible leaderboard views update
-```
-
-Define session expiry, question ordering, answer deadlines, retry behavior, idempotency, reconnect handling, abandoned sessions, timeout rules, scoring, tie-breaking and auditability. Do not launch cash-prize competition. Initial rankings are non-cash and must still use trusted server-side result data.
-
-## 8. Data domains to model
-
-Phase 1 must produce an entity relationship diagram and initial schema proposal for at least:
-- User/account identity and linked sign-in providers.
-- User profile and preferences.
-- Sessions, refresh/session revocation and verification state.
-- Categories, topics and question-source metadata (while preserving provider ownership/provenance).
-- Quiz definitions/configurations and quiz sessions.
-- Question delivery records and answer attempts.
-- Authoritative results and score ledger.
-- Daily/weekly challenge definitions and participation.
-- Streak/progress snapshots or derivable progress records.
-- Achievements and award records.
-- Leaderboard periods, entries or query strategy.
-- Entitlements/purchases as a future domain, with server verification requirements.
-
-Do not persist redundant derived data without a clear query/performance reason. Define ownership, indexes, uniqueness, retention, deletion behavior and migration strategy. Separate user PII from public leaderboard display data where practical.
-
-## 9. Integration and migration strategy
-
-- Keep V1 operational on `main`.
-- Build V2 independently on `v2-development`.
-- Reuse and extend stable Cloudflare question/provider logic through documented API contracts.
-- Do not assume V1 IndexedDB/localStorage data is automatically trustworthy or safely migratable.
-- Decide which V1 user-local data, if any, can be imported after account creation; label it as unverified legacy data unless independently validated.
-- Preserve existing application ID/signing considerations until an explicit release/package migration plan is approved. A native V2 may retain the existing application ID for an in-place upgrade only if package identity, signing continuity, data migration and compatibility are verified; otherwise document the consequences before changing it.
-- Keep V1 AdMob behavior documented; evaluate the appropriate native Google Mobile Ads SDK integration and policy requirements separately for V2.
-- Do not remove V1 files or alter production Worker behavior as a side effect of V2 foundation work.
-
-## 10. Phased implementation roadmap
-
-The V2 sequence is intentionally **design-first**. Brand identity, visual direction, navigation, all key screens and the native UI foundation must be settled before backend authentication integration. Login and registration screens are designed with the rest of the product; Google sign-in and account services are integrated later.
-
-### Phase 1 — Product architecture and documentation (baseline established)
-- Confirm native Kotlin + Jetpack Compose, five primary destinations, account methods and Cloudflare direction.
-- Preserve V1/V2 branch and release boundaries.
-- Record existing Worker/provider behavior, API compatibility rules, trust boundaries and database proposal.
-- Keep all V2 implementation work on `v2-development`; documentation updates may be committed directly to this branch when requested.
-- No production backend or V1 behavior changes.
-
-### Phase 2 — Brand identity and visual foundation
-- Finalize the V2 app icon, logo/brand mark and Android adaptive icon direction.
-- Specify native Android system splash and first-launch brand intro behavior.
-- Lock the shared Ricven palette with **Royal Navy** as the correct brand-anchor name (`#0B2970`), alongside Blue, Electric Cyan and Warm Gold.
-- Define light and dark theme tokens, typography, spacing, shapes, borders, elevation, shadows and reusable components.
-- Specify subtle premium background treatments: restrained ambient glows, soft tonal gradients, low-contrast geometric/abstract details and carefully controlled depth. Keep them understated, crisp and natural; avoid loud neon, busy patterns, excessive gradients, glossy effects or childish decoration.
-- Define contrast, reduced-motion, text-scaling and performance rules so decorative layers never reduce readability or responsiveness.
-
-### Phase 3 — Navigation, journeys and screen specification
-- Finalize the five-tab shell: Home, Explore, Challenges, Rankings and Profile.
-- Define nested navigation, independent tab state, Back/Up behavior, deep links and route restoration.
-- Map the complete user journeys, including guest/public browsing if retained, account entry, quiz setup/gameplay/results, challenges, rankings, profile and settings.
-- Design the sign-in, registration, Google-provider handoff, verification and recovery screens now; defer authentication service integration to Phase 8.
-- Specify a short, optional, skippable first-launch tutorial that introduces key features. It is not a separate mandatory welcome screen and must never block users from reaching Home.
-- Define loading, empty, offline, error, retry, permission and accessibility states.
-
-### Phase 4 — Penpot wireframes, high-fidelity designs and prototype
-- Use Penpot as the active editable design workspace; Figma remains reference/backup only.
-- Create wireframes and high-fidelity light/dark screens for the complete approved screen inventory.
-- Apply the approved Royal Navy-led design system consistently.
-- Prototype the primary journeys and test layouts/interactions against compact Android screens and larger devices.
-- Review iconography, typography, background decoration, contrast, motion and component consistency before implementation.
-- Record approved frames, interaction behavior and acceptance criteria in `ui-ux-project.md`.
-
-### Phase 5 — Native Android foundation and brand implementation
-- Create/configure the native Kotlin Android application foundation in the existing repository without disturbing V1.
-- Configure Gradle, Kotlin, Compose, Material 3, dependency/version management and build variants.
-- Establish app module/package structure and MVVM/repository boundaries.
-- Implement the approved theme tokens, light/dark modes, reusable components, icon assets, native splash and first-launch brand intro.
-- Configure Navigation Compose shell with five destinations and nested navigation.
-- Add baseline unit/UI tests and a V2 GitHub Actions debug build.
-- Demonstrate a reproducible debug APK build before broad feature implementation.
-
-### Phase 6 — Native screen implementation
-- Implement the approved Penpot screens and interactions in Compose, including Home, Explore, Challenges, Rankings and Profile.
-- Implement quiz setup, active quiz, feedback, results, history, challenge/ranking details and settings.
-- Implement sign-in/registration/recovery UI and the optional first-launch tutorial as designed, using clearly marked placeholder states until backend integration is ready.
-- Add loading, empty, offline, error and retry states.
-- Validate accessibility, navigation and visual fidelity on real Android devices.
-
-### Phase 7 — Cloudflare V2 backend foundation
-- Establish V2 Worker API contracts and environment configuration.
-- Validate the D1 proposal against current Cloudflare limits, cost, migration, backup, privacy and transactional requirements.
-- Configure D1 only after the persistence decision is approved, then apply versioned migrations.
-- Implement account/profile/session services and protected endpoints.
-- Integrate existing category/provider adapters without breaking V1 routes.
-- Add rate limiting, validation, monitoring, privacy-safe logs, backup/recovery and contract tests.
-
-### Phase 8 — Authentication and account integration
-- Implement email/password registration and login.
-- Implement Google sign-in and trusted backend identity-token verification.
-- Implement verification/recovery, session refresh/revocation, sign-out and account deletion flows.
-- Connect the already-designed native screens to real account services.
-- Implement profile and preferences synchronization.
-- Add authorization, abuse-control and privacy-lifecycle tests.
-
-### Phase 9 — Quiz, learning, challenges and rankings
-- Implement category/topic discovery, quiz configuration and trusted quiz-session lifecycle.
-- Implement answer submission, timer/timeout behavior, server-authoritative scoring, explanations and quiz history.
-- Synchronize progress/streaks and provide useful performance insights.
-- Implement daily/special challenge participation, achievements and leaderboard periods/tie rules.
-- Add replay protection, idempotency, auditability and privacy-safe public profiles.
-- Keep initial competition non-cash.
-
-### Phase 10 — Monetization, stabilization and release
-- Evaluate native AdMob integration with appropriate Android SDK, consent and policy handling.
-- Preserve a useful free experience and keep rewarded ads optional.
-- Implement billing/entitlement only after commercial and trusted-verification architecture approval.
-- Run security, privacy, accessibility, performance, device compatibility, backend resilience and migration tests.
-- Validate V1-to-V2 upgrade/signing/data behavior before production rollout.
-- Produce signed APK/AAB only through the approved release process.
-- Require explicit review before any V2-to-main merge or production release.
-
-## 11. Phase 1 deliverables and exit criteria
-
-Phase 1 is complete when the repository contains reviewed documentation for:
-1. Approved V2 architecture and branch boundaries.
-2. Five-tab navigation and nested information architecture.
-3. Email/password + Google identity and session lifecycle.
-4. V2 API surface and compatibility contract.
-5. Data model/ERD and a documented Cloudflare persistence decision.
-6. Security/threat model and trust boundaries.
-7. Quiz-session/scoring/leaderboard authority rules.
-8. Phases 2–8 implementation plan.
-9. Test strategy, acceptance criteria and unresolved decisions.
-
-No Kotlin feature implementation, D1 production binding, account endpoint deployment or V1 code modification is required to declare Phase 1 complete. Phase 1 is the architecture/documentation baseline; the next milestone is Phase 2 brand identity and visual foundation, followed by Penpot design. The roadmap now explicitly puts design and native UI ahead of backend authentication integration.
-
-## 12. Change control
-
-- Mark every feature as implemented, in progress, planned or proposed.
-- Update this document and the relevant UI/UX/backend documents when decisions change.
-- Do not treat a proposal as a deployed feature.
-- Keep V2 work on `v2-development`. Use separate feature branches primarily for implementation/code changes when appropriate; documentation-only changes may be committed directly to `v2-development` when requested. Do not modify `main` or merge V2 into it without explicit approval.
-- Preserve the existing V1 product, provider and monetization behavior while building V2.
+- Keep Android-specific implementation decisions here; link to the other authoritative documents for their domains.
+- Do not reproduce the project-wide production roadmap in this file.
+- Mark technical choices as approved, proposed or unresolved.
+- Update this document when Android stack, app structure, client state or integration behavior changes.
+- Work directly on v2-development for documentation-only changes when requested. Do not create a branch, PR or merge without explicit approval.
