@@ -81,7 +81,8 @@ The UI/UX document owns the detailed experience decisions. Backend/database docu
 | project.md | Product scope, V1/V2 boundaries, production roadmap, milestones and project-level open decisions. |
 | ui-ux-project.md | Brand, visual system, navigation UX, screen inventory, components, interaction states, accessibility and Penpot design decisions. |
 | v2-native-architecture.md | Kotlin/Compose application architecture, Android modules/layers, client state, navigation implementation and native integration boundaries. |
-| backend-architecture.md | Existing Worker facts, Cloudflare services, APIs, provider boundaries, backend security, scoring trust boundary and operations. |
+| backend-architecture.md | Existing Worker facts, Cloudflare services, APIs, provider boundaries, AI inference/generation services, backend security, scoring trust boundary and operations. |
+| current-affairs-project.md | Current Affairs domain coverage, source registry, verified fact model, freshness rules, question families and category-specific content validation. |
 | database-architecture-v2.md | V2 data model, entities, relationships, constraints, indexes, lifecycle and data integrity. |
 | commercial-monetization.md | Ads, Premium, Store, billing, pricing, entitlements and commercial policy. |
 
@@ -103,14 +104,14 @@ Use a multi-source pipeline:
 - Keep question-generation prompts, model credentials and provider keys on the backend. The Android app consumes approved questions through versioned APIs.
 - Select models, limits, review thresholds and generation budgets during Stage 7. Integrate the serving pipeline into quiz flows during Stage 9.
 
-The backend document owns the AI service/pipeline design; the database document owns stored question and provenance fields; the commercial document owns AI cost controls. This section records the project-level commitment only.
+The backend document owns the generic AI service/pipeline design; current-affairs-project.md owns Current Affairs-specific factual source and generation rules; the database document owns stored question and provenance fields; the commercial document owns AI cost controls. This section records the project-level commitment only.
 
 ## 8. Current Affairs and News Quiz boundary
 
 - Current Affairs is a fact-first verified knowledge system with provenance, freshness and question-family/anti-repetition controls.
 - News Quiz / Current Events is a separate live-news product and provider path. NewsData-specific credentials, parsing and generation must remain isolated.
 - The Current Affairs Question Bank and local recent-question history are separate systems.
-- The backend document owns the technical implementation boundary; this project document records only the product distinction.
+- current-affairs-project.md owns Current Affairs content/source rules; backend-architecture.md owns the technical implementation boundary. This project document records only the product distinction.
 
 ## 9. Documentation change control
 
