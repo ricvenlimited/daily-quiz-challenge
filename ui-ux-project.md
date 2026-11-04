@@ -11,11 +11,11 @@ A separate future **News Quiz / Current Events** experience may use NewsData.io 
 
 ## 1. Design Project Status
 
-**Current phase:** UI/UX planning + product architecture alignment — do not redesign production code yet. Africa & Nigeria is now integrated and production-verified. The immediate V1 priority is to finish Bible and Current Affairs, then stabilize the full V1 before beginning the major redesign.
+**Current phase:** V2 brand and native UI/UX design planning. V1 is stabilized and remains the reference implementation; the full redesign belongs to the native Kotlin/Jetpack Compose application on `v2-development`, not the React/Vite/Capacitor V1 codebase.
 
-Science and General Knowledge are integrated and Android-tested, and Africa & Nigeria is now integrated and production-verified. The remaining work is to define/implement Current Affairs and the new Bible reading/quiz architecture before the major UI implementation. This file and the main `project.md` must stay synchronized at major planning checkpoints.
+The approved next milestone is to finalize the Royal Navy-led brand identity, app icon/adaptive icon and splash direction; complete the light/dark design system and restrained premium background language; map navigation and user journeys; and design the complete screen inventory in Penpot. Sign-in and registration screens are included in this early design work, while real email/password and Google authentication integration follows the native UI foundation. Keep this file synchronized with `project.md` and `v2-native-architecture.md` at major checkpoints.
 
-When the functional foundation is ready, this file becomes the primary blueprint for the redesign.
+This file is the primary UI/UX blueprint for the native V2 redesign. Historical V1 checkpoints below are retained for continuity and do not override the current V2 direction.
 
 ### V1 checkpoint — 22 September 2026
 The redesign is intentionally deferred while the current V1 is completed. The current React/Vite/Capacitor UI remains the working validation interface. Discussion of a future native Android foundation, new product/company branding, and expanded learning-platform navigation is planning only; none should trigger a production UI rewrite yet. After Bible and Current Affairs are working, a full V1 stability pass will precede the major UI/UX implementation.
