@@ -1,46 +1,18 @@
-# Daily Quiz & Challenge — Commercial & Monetization Plan
-## Current Affairs commercial/content checkpoint — 23 September 2026
+# Daily Quiz & Challenge — Commercial & Monetization Authority
 
-Current Affairs is being designed as a broad, fact-first knowledge category rather than a live-news headline feed. The commercial content architecture should therefore treat its verified facts, freshness requirements, provenance and update burden as first-class metadata. The existing NewsData integration is reserved for a future **News Quiz / Current Events** product and must remain isolated from the Current Affairs provider path.
+**Status:** Commercial strategy defined at high level; V2 billing and entitlement implementation is not started.
+**Scope:** Ads, Free/Premium access, Store, billing, pricing, entitlements, provider licensing and AI-generation economics.
+**Roadmap:** Production stages and sequencing are owned by [project.md](project.md).
 
-The eight Current Affairs domains are: Nigeria, Africa, World, International Organizations, Economy & Business, Geography, Sports, and Science & Technology. Future free/premium access can be applied at domain/topic/content level without coupling the content model to a specific provider.
+This document is the sole authority for commercial rules. Backend enforcement is specified in backend-architecture.md; stored data is specified in database-architecture-v2.md; user-facing presentation is specified in ui-ux-project.md.
 
-
-**File:** `commercial-monetization.md`  
-**Status:** Strategic product specification — planned, not yet fully implemented. Africa & Nigeria is production-verified; Current Affairs is the remaining V1 content implementation target. Bible commercial/product architecture is planned for the future native Android experience; commercial implementation remains deferred until the V1 foundation and later account/entitlement architecture are ready.  
-**Purpose:** Sole authority for the commercial model, Premium, advertising, entitlements, billing, pricing, provider licensing and AI-generation cost controls. Overall production sequencing is owned by project.md.
-
----
-
-## V1 checkpoint — 22 September 2026
-
-The commercial strategy and billing architecture remain planned specifications. No billing, Premium entitlement enforcement, or new monetization implementation is being started during the current V1 category-completion milestone.
-
-Immediate product priority:
-- Africa & Nigeria — integrated and production-verified.
-- Finish Bible.
-- Finish Current Affairs.
-- Run the full V1 stabilization pass.
-- Stabilize the full V1 quiz experience.
-
-After V1 stabilization, the commercial plan will be revisited alongside the technical architecture, new brand/package identity, and UI/UX redesign. Provider/source choices for the remaining categories should consider commercial licensing, but category completion should not be blocked by trying to perfect the entire future monetization system now.
-
----
-
-## V1 planning checkpoint — Bible UI and native migration
-
-The Bible is now treated as a future product experience rather than a V1 category implementation. The current V1 app may show a lightweight **Bible — Coming Soon / In Development** notice instead of exposing temporary Bible navigation.
-
-The future Bible experience may eventually support:
-- Offline Bible reading.
-- Bible Quiz.
-- Book/chapter/topic quiz modes.
-- Explicit user-controlled voice reading.
-- Future study features.
-
-The full Bible navigation and major UI/UX redesign will be designed independently and implemented during the planned native Android migration. This avoids building temporary monetization/UI rules into the current React/Vite/Capacitor V1.
-
-Commercial decisions for Bible — including any future free/premium split, premium study features, ad treatment, or entitlement requirements — remain undecided until the future product architecture is designed.
+**Current product principles**
+- Keep a genuinely useful free experience.
+- Premium should add clear value without aggressive paywalls.
+- Keep Remove Ads separate from Premium.
+- Verify purchases and entitlements on the trusted backend.
+- Apply the same content-quality and rights standards to free and paid content.
+- Keep the product globally viable; do not hard-code a Nigeria-only business model.
 
 ## 1. Purpose and guiding principles
 
@@ -1117,134 +1089,11 @@ Africa & Nigeria can therefore serve as an important foundation for a broader gl
 
 ---
 
-# 34. Planned development phases
+# 34. Implementation sequencing
 
-## Phase A — Commercial specification
+Commercial design requirements must be considered during product, UX and architecture work. Implementation timing is governed exclusively by project.md. Native ads, billing, purchase verification and entitlement rollout are planned for the monetization/release stage unless the project roadmap explicitly approves a dependency earlier.
 
-Document:
-
-- Free tier.
-- Premium.
-- Remove Ads.
-- Content packs.
-- Rewarded ads.
-- Entitlements.
-- Access levels.
-- Category monetization.
-- Billing architecture.
-
-**Status: PLANNED / SPECIFICATION CREATED**
-
-## Phase B — Commercial-aware content architecture
-
-Build category/topic/access metadata into the content architecture.
-
-**Status: FUTURE**
-
-## Phase C — User/account and entitlement foundation
-
-Implement the trusted backend model required for user entitlements and purchase state.
-
-**Status: FUTURE**
-
-## Phase D — Google Play Billing
-
-Implement subscriptions and one-time digital purchases when Play distribution and commercial readiness justify it.
-
-**Status: FUTURE**
-
-## Phase E — Premium content rollout
-
-Gradually introduce:
-
-- Premium categories.
-- Premium quiz modes.
-- Premium statistics.
-- Premium Bible features.
-- Premium Current Affairs.
-- Premium Africa & Nigeria content.
-
-**Status: FUTURE / PHASED**
-
-## Phase F — Optimization
-
-Measure:
-
-- Free-user retention.
-- Ad revenue.
-- Premium conversion.
-- Subscription retention.
-- Remove Ads purchases.
-- Content engagement.
-- Category popularity.
-- Quiz completion.
-- Rewarded-ad usage.
-
-Then adjust the product based on actual evidence.
-
-**Status: FUTURE**
-
----
-
-# 35. What should NOT be implemented immediately
-
-Do not rush to implement every commercial idea.
-
-The immediate project should continue prioritizing:
-
-1. Reliable online question architecture.
-2. Africa & Nigeria source/provider research.
-3. Current Affairs architecture.
-4. Bible architecture and licensing.
-5. UI/UX redesign.
-6. Stable user/account architecture.
-7. Commercial-aware access control foundation.
-
-Actual billing can come later.
-
-The goal now is to make sure the architecture will support monetization without needing a major rewrite.
-
----
-
-# 36. Initial commercial roadmap
-
-### Now
-
-- Establish commercial specification.
-- Design free/premium access model.
-- Design entitlement identifiers.
-- Continue provider licensing research.
-- Design categories with access levels.
-- Keep test AdMob infrastructure for development.
-
-### Near term
-
-- Implement commercial-aware category metadata.
-- Prepare account/entitlement architecture.
-- Design Premium UI/UX in Figma.
-- Define subscription/product IDs.
-- Prepare backend purchase-verification architecture.
-
-### Later
-
-- Google Play Billing.
-- Premium subscription.
-- Remove Ads.
-- Premium category unlocks.
-- Premium quiz modes.
-- Premium statistics.
-- Premium Bible experience.
-- Current Affairs Pro.
-- One-time content packs.
-
-### Long term
-
-- Tournaments.
-- International expansion.
-- More content providers.
-- Personalized learning.
-- Advanced analytics.
-- Additional premium experiences.
+This document retains commercial readiness criteria and unresolved commercial decisions; it does not define a parallel A–F development schedule.
 
 ---
 
@@ -1335,219 +1184,20 @@ The guiding principle remains:
 
 ---
 
-## Current status
+## V1 commercial implementation record
 
-**Commercial strategy:** Defined at high level  
-**Commercial specification file:** Created  
-**Billing implementation:** Not started  
-**Premium entitlement implementation:** Not started  
-**Remove Ads implementation:** Not started  
-**Premium category access:** Not started  
-**Pricing:** Not yet decided  
-**Google Play Billing:** Future  
-**Provider licensing:** Ongoing research  
-**UI/UX Premium screens:** Designed in Penpot as part of V2 UX work  
-**V1.1.4:** Africa & Nigeria is production-verified; the existing AdMob architecture is preserved and release builds now use production ad IDs  
-**V2:** Active documentation and design planning; implementation status is tracked in project.md
+V1 was stabilized with AdMob. V1 did not implement Google Play Billing, Premium subscriptions, Remove Ads purchases or server-side entitlement enforcement. The existing V1 ad behavior and release configuration must remain untouched during V2 development.
 
-This document is the working commercial blueprint and should be updated whenever a major monetization decision is made.
+Current Affairs content milestones and question-generation implementation history are maintained in current-affairs-project.md and backend-architecture.md, not repeated here.
 
-## Current Affairs Phase 2 commercial-architecture checkpoint — 23 September 2026
+## V2 commercial status
 
-Current Affairs Phase 2 is now being implemented as a fact-first knowledge base. The content model is deliberately being kept compatible with the commercial architecture without introducing billing or paywalls yet.
+- Native AdMob: planned for project.md Stage 10.
+- Google Play Billing, subscriptions and one-time purchases: not implemented.
+- Premium and Remove Ads entitlements: not implemented.
+- Product IDs, prices and final free/Premium split: undecided.
+- Purchase verification and entitlement state must be server-authoritative.
+- Premium/Store entry points are nested within the five-tab information architecture, not a sixth tab.
+- AI-generated content must pass the same validation and rights checks regardless of access tier.
 
-Future content records may support an optional access classification such as:
-- FREE
-- PREMIUM
-- SPECIAL_PACK
-- FUTURE_ENTITLEMENT
-
-This classification belongs at the content/topic/fact or generated-question layer as appropriate; it should not be hard-coded throughout the quiz UI or provider code. Actual entitlement enforcement will be added later through the centralized commercial architecture.
-
-For Current Affairs specifically, future premium value can come from deeper topic collections, expanded question pools, advanced difficulty, richer explanations/revision tools, advanced statistics and other educational features. The exact free/premium split remains undecided.
-
-Phase 2 rule: build the content system once and keep access control separable. Do not reduce content quality simply to create premium inventory, and do not implement subscriptions, purchases or premium locks during this phase.
-
-
-## Current Affairs Phase 2 continuation — 23 September 2026
-
-The content layer now carries a future-only access-tier contract (free, premium, special_pack) while enforcement remains disabled. This preserves future monetization flexibility without coupling current quiz logic to billing. Additional institutional/economic facts are being added before question generation.
-
-## Current Affairs Phase 2 expansion checkpoint — 23 September 2026
-
-The Current Affairs knowledge layer has been expanded across Nigeria, Africa, World Geography, Economy, International Organizations, Sports, and Science & Technology before any Question Bank implementation. Future access tiers remain metadata-only; no premium enforcement, subscriptions, billing, or paywalls are being introduced during this content-expansion phase.
-
-The commercial architecture therefore remains a constraint on the data model, not an implementation dependency: future free/premium/special-pack classification can be added without changing the verified-facts source of truth.
-
-## Phase 2 audit checkpoint — 23 September 2026
-
-The Phase 2 audit found that the earlier expansion pass was not yet complete: Sports and Science & Technology coverage had not been fully inserted into the fact array, and one ECOWAS source ID needed normalization. These issues were corrected in the knowledge-base file. The current audit confirms a fact-first dataset with complete required fields for the active records, no duplicate fact IDs, and source references normalized to the source registry. Phase 2 remains in final validation rather than being declared production-complete until the full source/freshness/content-coverage review is finished.
-
-## Final Phase 2 audit — 23 September 2026
-
-Final structural audit completed after the expansion corrections. The Current Affairs fact dataset now contains 86 active records across all seven implemented expansion areas represented in the Phase 2 scope: Nigeria (48), Africa (9), Economy (9), Sports (6), World (5), International Organizations (3), and Science & Technology (6). Every fact contains the required core fields, no duplicate fact IDs were found, every referenced source ID resolves to the source registry, the JavaScript array/export structure is intact, and no future-dated verification metadata was detected. Current officeholder/institutional and dated-event facts remain subject to freshness review before serving. Phase 2 content expansion is therefore complete and the dataset is ready to move to the next controlled stage: Phase 3 question-generation design/implementation. The Question Bank remains a later stage and is not being mixed into this audit.
-
-## Current Affairs NewsData isolation and Phase 3 checkpoint — 24 September 2026
-
-NewsData.io is now explicitly reserved for the future **News Quiz / Current Events** product. It is no longer a provider for the V1 Current Affairs category.
-
-The separation supports the commercial architecture by keeping two different products/content models distinct:
-
-- **Current Affairs:** verified, structured knowledge with validity/freshness metadata.
-- **News Quiz / Current Events:** recent-news articles supplied by NewsData.io or a future news provider.
-
-NewsData-specific provider code is isolated under `worker/news-quiz/`. The V1 Current Affairs route must not depend on the NewsData credential, article parser, or headline-question generator.
-
-No billing, premium enforcement, or paywalls are introduced by this change.
-
-## Phase 3 commercial-architecture alignment
-
-The Phase 3 question system will retain future access-tier metadata such as:
-
-- `FREE`
-- `PREMIUM`
-- `SPECIAL_PACK`
-
-These are metadata contracts only at this stage. They do not grant or deny access.
-
-Question provenance, fact relationships, freshness, question-family identity and lifecycle status should be retained so future premium content can be selected centrally without duplicating provider logic.
-
-The commercial rule remains: premium content must meet the same factual, clarity, distractor, freshness and anti-duplication standards as free content.
-
-
-## Phase 3B commercial alignment — 24 September 2026
-
-The Current Affairs Question Blueprint layer is now implemented. Blueprint metadata and question-generation contracts preserve future access-tier compatibility (`FREE`, `PREMIUM`, `SPECIAL_PACK`) without implementing entitlement enforcement.
-
-Blueprint selection is content-generation logic, not billing logic. Future premium/special-pack questions must pass the same factual, clarity, freshness, distractor and anti-duplication requirements as free questions. Access decisions remain centralized and are not embedded in individual blueprint behavior.
-
-**Commercial status:** no billing, subscriptions, paywalls or entitlement enforcement were added in Phase 3B.
-
-
-## Phase 3C commercial alignment — 24 September 2026
-
-The Current Affairs Question Generator now carries future access-tier metadata while keeping billing completely separate from content generation. Generated drafts default to `FREE`; future centralized commercial logic may classify validated content as `PREMIUM` or `SPECIAL_PACK` without changing generator behavior.
-
-The generator does not make access decisions, enforce entitlements, or create paywalls. Commercial classification must remain downstream of content quality and validation so premium content is held to the same factual, freshness, clarity and anti-duplication standards.
-
-
-## Phase 3G commercial-architecture alignment — 24 September 2026
-
-The Current Affairs Quiz Assembler now accepts configurable access tiers while keeping entitlement logic outside the content-selection module. The default serving configuration is FREE-only for the current V1. Future centralized commercial logic can supply PREMIUM or SPECIAL_PACK eligibility without changing question generation or quiz-quality rules.
-
-The assembler treats access tier as a content eligibility attribute, not as proof of purchase or subscription. No billing, payment, subscription, entitlement or paywall code was added in Phase 3G.
-
-Commercial rule remains: access control must never bypass factual validation, freshness checks, provenance, or anti-repetition protections.
-
-## Current Affairs Question Bank checkpoint — 24 September 2026
-
-The Current Affairs Question Bank is a **content-management layer**, not the billing or entitlement layer. Phase 3A already defines future FREE, PREMIUM, and SPECIAL_PACK metadata, but these fields do not currently enforce payment access.
-
-Before Worker integration, the project will implement Question Bank storage and management while keeping content records separate from billing. The bank will preserve question identity, family/concept relationships, validation status, provenance, freshness metadata and future access-tier metadata.
-
-**No billing implementation is being added in this stage.** The immediate goal is a reliable, auditable Question Bank that can later support monetized content without redesigning the underlying question records.
-
-## Current Affairs Phase 3H commercial-alignment checkpoint — 24 September 2026
-
-Phase 3H Question Bank Storage & Management is complete through 3H-E. The Question Bank preserves future `FREE`, `PREMIUM` and `SPECIAL_PACK` access-tier metadata without implementing billing, subscriptions, purchases or entitlement enforcement.
-
-The Question Bank manager treats access tier as content metadata. Phase 3G can filter eligible tiers, but tier eligibility is not proof of purchase and must later be supplied by the centralized entitlement architecture.
-
-Commercial protections remain unchanged:
-- Premium questions must pass the same factual, freshness, provenance, distractor and anti-duplication standards as free questions.
-- Billing logic must not be embedded in Question Bank records or generation code.
-- The storage-independent design avoids unnecessary paid infrastructure at this stage.
-- Future persistent storage or entitlement services can be introduced without changing the core question identity/provenance contract.
-
-**Commercial status: Phase 3H alignment complete; billing and entitlement implementation remain future work.**
-
-
-## Phase 3I-A / 3I-B commercial-alignment checkpoint — 24 September 2026
-
-The Current Affairs Worker and first serving Question Bank are now connected, but access remains **FREE-only** for this V1 testing path.
-
-The 29-record serving seed carries access-tier metadata and is filtered by the Worker/assembler boundary. This is content eligibility metadata only; it is not proof of purchase and does not implement subscriptions, payments, entitlements or paywalls.
-
-The architecture deliberately keeps:
-- Question Bank content management separate from billing;
-- access-tier filtering separate from entitlement verification;
-- NewsData isolated from the Current Affairs product;
-- AdMob untouched.
-
-The commercial architecture therefore remains ready for future PREMIUM and SPECIAL_PACK content without embedding payment logic into question records.
-
-**Commercial status: 3I alignment complete; billing/entitlement implementation remains future work.**
-
-## Current Affairs Phase 3J Step A commercial-alignment checkpoint — 24 September 2026
-
-The Current Affairs runtime generation bridge is now fact-first and commercial-aware without implementing monetization.
-
-Validated runtime-generated questions retain the existing future access-tier contract (FREE, PREMIUM, SPECIAL_PACK). Step A serves FREE content only, and access-tier metadata is not treated as proof of purchase.
-
-The Question Bank remains a content-management layer, while future Cloudflare D1 persistence is planned as Step B. D1 persistence will store validated question records without embedding billing or entitlement decisions into generation logic.
-
-No subscriptions, payments, premium locks, entitlement checks or paywalls were added in Step A.
-
-Commercial rule remains unchanged: future premium content must pass the same factual, freshness, provenance, distractor, quality and anti-repetition standards as free content.
-
-
-## Current Affairs implementation-complete checkpoint — 24 September 2026
-
-The V1 **Current Affairs category implementation is now complete for the current stabilization milestone**.
-
-Completed implementation chain:
-- Verified fact-first Current Affairs knowledge base and source/provenance model.
-- Phase 3A–3H question model, blueprints, generation, distractors, quality validation, duplicate/family detection, quiz assembly, and Question Bank management.
-- Phase 3I Worker integration and version-controlled serving Question Bank.
-- Phase 3J runtime generation/coverage path for recovery when recent-history filtering exhausts the seeded bank.
-- Current Affairs remains isolated from NewsData; NewsData is reserved for the future News Quiz / Current Events product.
-- Recent-history exhaustion testing successfully returned a complete 10-question quiz without re-serving the 20 supplied recent-history IDs.
-- Runtime exhaustion recovery is therefore considered functionally established for this V1 milestone.
-- The preferred 4 Easy / 4 Medium / 2 Hard distribution may relax when the available eligible pool is constrained by recent-history/exhaustion rules; anti-repeat protections remain in force.
-- Known Question Bank explanation/content cleanup items observed during testing are recorded as a later cleanup task and are **not** being changed in this checkpoint.
-
-### Next controlled release steps
-
-1. Merge the completed Current Affairs implementation pull request into `main`.
-2. Confirm the merged `main` state and production Worker deployment.
-3. Build the Android **Debug APK** from the merged state.
-4. Install/update the Debug APK on the test phone.
-5. Run end-to-end V1 category testing, with Current Affairs included, while protecting the already-confirmed Science, General Knowledge, Africa & Nigeria and AdMob behavior.
-6. Record any findings as stabilization fixes only; do not begin the major native Android/UI redesign during this test cycle.
-
-**Current milestone:** Current Affairs implementation complete → PR merge → Debug APK validation → V1 stabilization.
-
-
-## V1 stabilization complete — 24 September 2026
-
-V1 is now officially stabilized at the commercial-architecture level. The V1 AdMob system is the stabilized monetization integration: Debug builds use test ads and the release workflow uses production AdMob IDs. The Android release workflow targets **versionName 1.2.1 / versionCode 8**.
-
-No billing, subscriptions, Premium entitlements, Remove Ads purchase, or paywall enforcement has been implemented in V1. Those remain future commercial capabilities for the native Android V2 product.
-
-The commercial architecture remains intentionally separated from content generation and question selection. Future Premium, Remove Ads, Bible, Current Affairs Pro, advanced statistics, endless mode, and content-pack entitlements will be designed and implemented centrally in V2 when commercial readiness justifies them.
-
-**V1 commercial status: STABILIZED.**
-
-**Next milestone: Native Android V2 commercial/product architecture.**
-
-
-## Native Android V2 commercial integration checkpoint — 3 November 2026
-
-**Status: commercial architecture remains planned; no new billing or entitlement implementation is implied.**
-
-The approved V2 client direction is native Android using Kotlin and Jetpack Compose. The existing commercial principles in this document remain in force: a useful free experience, optional rewarded ads, clear separation between Remove Ads and Premium, transparent pricing, and no aggressive paywalls.
-
-V2 account and entitlement design must align with the approved Cloudflare backend architecture:
-- Email/password and Google sign-in are the approved account methods.
-- Account identity and authenticated sessions are separate from purchase state.
-- Purchase verification and entitlement decisions must be made by a trusted backend; a client-side premium flag or purchase callback is not authoritative.
-- Future Google Play Billing integration must be reviewed against current Play requirements at implementation time.
-- Entitlements should be centralized and server-authoritative, with clear expiry, cancellation, refund, pending and restore behavior.
-- Ad removal, Premium, Bible access, Current Affairs access and other content/feature entitlements remain distinct products or permissions as specified by the final commercial design.
-
-Native AdMob implementation belongs to project.md Stage 10. The existing V1 AdMob implementation must remain untouched while V2 is developed.
-
-The five V2 primary navigation destinations are Home, Explore, Challenges, Rankings and Profile. Commercial entry points such as Premium/Store, purchase management and entitlement details should be nested within appropriate destinations (typically Profile or relevant locked content), not added as additional primary navigation tabs.
-
-No subscription prices, product IDs, billing endpoints, D1 tables or purchase verification services are approved by this checkpoint. Those decisions require a separate implementation-ready commercial and technical review.
-
+No billing products, production purchase endpoints, D1 tables or entitlement services are approved as deployed by this document.
