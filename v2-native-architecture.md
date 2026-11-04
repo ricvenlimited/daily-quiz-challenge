@@ -100,9 +100,9 @@ Compose screens should render state and dispatch user actions. They should not d
 
 ## 4. Design system and UI/UX
 
-Use the approved shared Ricven/RichInsights palette documented in `ui-ux-project.md`. Do not invent a competing palette. Preserve accessible contrast, scalable typography, predictable touch targets, light/dark themes and coherent component behavior.
+Use the approved shared Ricven/RichInsights palette documented in `ui-ux-project.md`, with **Royal Navy** (`#0B2970`) as the brand-anchor name. Do not call this token Deep Navy or invent a competing palette. Preserve accessible contrast, scalable typography, predictable touch targets, light/dark themes and coherent component behavior.
 
-The native UI should be designed in Penpot before detailed screen implementation. Approved screens and interaction decisions must be recorded in `ui-ux-project.md`. Build reusable Compose components and theme tokens rather than styling each screen independently.
+The native UI must be designed in Penpot before detailed screen implementation. Brand identity, icon, splash, design tokens, navigation, screen layouts and authentication UI are designed and reviewed before native screen implementation or authentication integration. Approved screens and interaction decisions must be recorded in `ui-ux-project.md`. Build reusable Compose components and theme tokens rather than styling each screen independently.
 
 The five-tab information architecture is approved, but detailed screen layouts, icon choices, tab labels, badges, empty states and transitions remain subject to wireframing and design review.
 
@@ -225,75 +225,85 @@ Do not persist redundant derived data without a clear query/performance reason. 
 
 ## 10. Phased implementation roadmap
 
-### Phase 1 — Architecture and documentation (current)
-- Confirm native Kotlin + Jetpack Compose.
-- Confirm five primary navigation destinations and nested navigation rules.
-- Confirm email/password and Google sign-in.
-- Document V1/V2 branch and release boundaries.
-- Review existing Worker routes, providers, secrets and current persistence.
-- Define V2 API boundaries and compatibility approach.
-- Produce account/authentication flow and threat model.
-- Produce data model/ERD and evaluate D1/KV/R2 needs and cost.
-- Define server-authoritative quiz-session, scoring and leaderboard rules.
-- Record open decisions, assumptions, acceptance criteria and test strategy.
-- Keep this phase documentation/design-only; no production backend or V1 behavior changes.
+The V2 sequence is intentionally **design-first**. Brand identity, visual direction, navigation, all key screens and the native UI foundation must be settled before backend authentication integration. Login and registration screens are designed with the rest of the product; Google sign-in and account services are integrated later.
 
-### Phase 2 — Native Android foundation
+### Phase 1 — Product architecture and documentation (baseline established)
+- Confirm native Kotlin + Jetpack Compose, five primary destinations, account methods and Cloudflare direction.
+- Preserve V1/V2 branch and release boundaries.
+- Record existing Worker/provider behavior, API compatibility rules, trust boundaries and database proposal.
+- Keep all V2 implementation work on `v2-development`; documentation updates may be committed directly to this branch when requested.
+- No production backend or V1 behavior changes.
+
+### Phase 2 — Brand identity and visual foundation
+- Finalize the V2 app icon, logo/brand mark and Android adaptive icon direction.
+- Specify native Android system splash and first-launch brand intro behavior.
+- Lock the shared Ricven palette with **Royal Navy** as the correct brand-anchor name (`#0B2970`), alongside Blue, Electric Cyan and Warm Gold.
+- Define light and dark theme tokens, typography, spacing, shapes, borders, elevation, shadows and reusable components.
+- Specify subtle premium background treatments: restrained ambient glows, soft tonal gradients, low-contrast geometric/abstract details and carefully controlled depth. Keep them understated, crisp and natural; avoid loud neon, busy patterns, excessive gradients, glossy effects or childish decoration.
+- Define contrast, reduced-motion, text-scaling and performance rules so decorative layers never reduce readability or responsiveness.
+
+### Phase 3 — Navigation, journeys and screen specification
+- Finalize the five-tab shell: Home, Explore, Challenges, Rankings and Profile.
+- Define nested navigation, independent tab state, Back/Up behavior, deep links and route restoration.
+- Map the complete user journeys, including guest/public browsing if retained, account entry, quiz setup/gameplay/results, challenges, rankings, profile and settings.
+- Design the sign-in, registration, Google-provider handoff, verification and recovery screens now; defer authentication service integration to Phase 8.
+- Specify a short, optional, skippable first-launch tutorial that introduces key features. It is not a separate mandatory welcome screen and must never block users from reaching Home.
+- Define loading, empty, offline, error, retry, permission and accessibility states.
+
+### Phase 4 — Penpot wireframes, high-fidelity designs and prototype
+- Use Penpot as the active editable design workspace; Figma remains reference/backup only.
+- Create wireframes and high-fidelity light/dark screens for the complete approved screen inventory.
+- Apply the approved Royal Navy-led design system consistently.
+- Prototype the primary journeys and test layouts/interactions against compact Android screens and larger devices.
+- Review iconography, typography, background decoration, contrast, motion and component consistency before implementation.
+- Record approved frames, interaction behavior and acceptance criteria in `ui-ux-project.md`.
+
+### Phase 5 — Native Android foundation and brand implementation
 - Create/configure the native Kotlin Android application foundation in the existing repository without disturbing V1.
 - Configure Gradle, Kotlin, Compose, Material 3, dependency/version management and build variants.
 - Establish app module/package structure and MVVM/repository boundaries.
-- Configure themes/design tokens and reusable components from approved Ricven identity.
+- Implement the approved theme tokens, light/dark modes, reusable components, icon assets, native splash and first-launch brand intro.
 - Configure Navigation Compose shell with five destinations and nested navigation.
-- Configure networking, serialization, dependency injection and local persistence choices.
-- Add baseline unit/UI tests and V2 GitHub Actions debug build.
-- Demonstrate a reproducible debug APK build before feature implementation.
+- Add baseline unit/UI tests and a V2 GitHub Actions debug build.
+- Demonstrate a reproducible debug APK build before broad feature implementation.
 
-### Phase 3 — Navigation and screen development
-- Implement Home, Explore, Challenges, Rankings and Profile destination shells.
-- Implement nested flows, deep links where required, back/up behavior and state restoration.
+### Phase 6 — Native screen implementation
+- Implement the approved Penpot screens and interactions in Compose, including Home, Explore, Challenges, Rankings and Profile.
+- Implement quiz setup, active quiz, feedback, results, history, challenge/ranking details and settings.
+- Implement sign-in/registration/recovery UI and the optional first-launch tutorial as designed, using clearly marked placeholder states until backend integration is ready.
 - Add loading, empty, offline, error and retry states.
-- Add authentication/onboarding screens and route guards.
-- Implement the approved Penpot UI specification in Compose.
-- Validate navigation accessibility and behavior on real Android devices.
+- Validate accessibility, navigation and visual fidelity on real Android devices.
 
-### Phase 4 — User accounts and authentication
-- Implement email/password registration and login.
-- Implement Google sign-in and backend token verification.
-- Implement verification/recovery, session refresh/revocation, sign-out and account deletion flows.
-- Implement profile and preferences synchronization.
-- Add authorization tests, abuse controls and privacy lifecycle behavior.
-- Do not expose protected user records to unauthenticated or cross-account requests.
-
-### Phase 5 — Cloudflare backend integration
+### Phase 7 — Cloudflare V2 backend foundation
 - Establish V2 Worker API contracts and environment configuration.
-- Configure D1 only after Phase 1 approval, then apply versioned migrations.
+- Validate the D1 proposal against current Cloudflare limits, cost, migration, backup, privacy and transactional requirements.
+- Configure D1 only after the persistence decision is approved, then apply versioned migrations.
 - Implement account/profile/session services and protected endpoints.
-- Implement quiz-session and server-authoritative result APIs.
 - Integrate existing category/provider adapters without breaking V1 routes.
-- Add rate limiting, validation, monitoring, logs that avoid sensitive data, backup/recovery and contract tests.
-- Keep secrets isolated by environment.
+- Add rate limiting, validation, monitoring, privacy-safe logs, backup/recovery and contract tests.
 
-### Phase 6 — Quiz and learning experience
-- Implement category/topic discovery and quiz configuration.
-- Integrate question delivery and session lifecycle.
-- Implement answer submission, timer/timeout behavior and feedback.
-- Implement trusted results, explanations and quiz history.
+### Phase 8 — Authentication and account integration
+- Implement email/password registration and login.
+- Implement Google sign-in and trusted backend identity-token verification.
+- Implement verification/recovery, session refresh/revocation, sign-out and account deletion flows.
+- Connect the already-designed native screens to real account services.
+- Implement profile and preferences synchronization.
+- Add authorization, abuse-control and privacy-lifecycle tests.
+
+### Phase 9 — Quiz, learning, challenges and rankings
+- Implement category/topic discovery, quiz configuration and trusted quiz-session lifecycle.
+- Implement answer submission, timer/timeout behavior, server-authoritative scoring, explanations and quiz history.
 - Synchronize progress/streaks and provide useful performance insights.
-- Validate online/offline transitions, provider failure and recovery.
+- Implement daily/special challenge participation, achievements and leaderboard periods/tie rules.
+- Add replay protection, idempotency, auditability and privacy-safe public profiles.
+- Keep initial competition non-cash.
 
-### Phase 7 — Challenges and rankings
-- Implement daily/special challenge lifecycle and participation.
-- Implement server-authoritative points, achievements and award records.
-- Implement leaderboard periods, ranking/tie rules and privacy-safe public profiles.
-- Add anti-abuse, replay protection, idempotency and auditability.
-- Keep competition non-cash in the initial release.
-
-### Phase 8 — Monetization and release testing
-- Evaluate and implement native AdMob integration with appropriate Android SDK and consent/policy handling.
+### Phase 10 — Monetization, stabilization and release
+- Evaluate native AdMob integration with appropriate Android SDK, consent and policy handling.
 - Preserve a useful free experience and keep rewarded ads optional.
-- Implement billing/entitlement only after the commercial specification and trusted verification architecture are approved.
+- Implement billing/entitlement only after commercial and trusted-verification architecture approval.
 - Run security, privacy, accessibility, performance, device compatibility, backend resilience and migration tests.
-- Validate V1-to-V2 upgrade/signing/data behavior before any production rollout.
+- Validate V1-to-V2 upgrade/signing/data behavior before production rollout.
 - Produce signed APK/AAB only through the approved release process.
 - Require explicit review before any V2-to-main merge or production release.
 
@@ -310,12 +320,12 @@ Phase 1 is complete when the repository contains reviewed documentation for:
 8. Phases 2–8 implementation plan.
 9. Test strategy, acceptance criteria and unresolved decisions.
 
-No Kotlin feature implementation, D1 production binding, account endpoint deployment or V1 code modification is required to declare Phase 1 complete. The next work after approval is Phase 2.
+No Kotlin feature implementation, D1 production binding, account endpoint deployment or V1 code modification is required to declare Phase 1 complete. Phase 1 is the architecture/documentation baseline; the next milestone is Phase 2 brand identity and visual foundation, followed by Penpot design. The roadmap now explicitly puts design and native UI ahead of backend authentication integration.
 
 ## 12. Change control
 
 - Mark every feature as implemented, in progress, planned or proposed.
 - Update this document and the relevant UI/UX/backend documents when decisions change.
 - Do not treat a proposal as a deployed feature.
-- Do not modify `main` or merge V2 into it without explicit approval.
+- Keep V2 work on `v2-development`. Use separate feature branches primarily for implementation/code changes when appropriate; documentation-only changes may be committed directly to `v2-development` when requested. Do not modify `main` or merge V2 into it without explicit approval.
 - Preserve the existing V1 product, provider and monetization behavior while building V2.
