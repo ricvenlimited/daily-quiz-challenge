@@ -233,16 +233,59 @@ Before release:
 7. Choose and configure persistent storage only when account history, authoritative results or entitlements are ready to ship.
 8. Add monitoring, operational runbooks, backup/restore and data-retention policies alongside any future persistence layer.
 
-## 13. Architecture change control
+## 13. AI-assisted question generation and content services
+
+**V2 direction: required capability; not deployed or enabled by this document.** Cloudflare Workers AI is the first native inference option to evaluate. AI Gateway should be evaluated as the observability, caching, rate-limiting and provider-routing layer, including the option to connect an external model if it materially improves quality, availability or cost. Do not assume a specific model, model ID, price or quota until validated against current Cloudflare offerings and the project's account/plan.
+
+### Service responsibilities
+
+- Keep all inference calls, prompts, model identifiers and provider credentials on the Worker/backend. The Android client must never call model providers directly or contain API secrets.
+- Build a provider-neutral generation interface so Workers AI can be replaced or supplemented without coupling business logic to one model.
+- Use trusted curated facts and licensed/provider content as grounding inputs. AI can draft questions, answer options, explanations, topic tags, difficulty variants and language variations; it is not itself a source of factual truth.
+- Maintain separate pipelines for fact-first Current Affairs and live-news News Quiz. News Quiz content must be grounded in the retrieved article and retain its article/source reference and timestamp.
+- Prefer asynchronous, bounded batch generation into a staging/validation queue. Player-facing quiz requests should normally retrieve approved questions from the serving bank, not synchronously generate large batches.
+- A bounded runtime fallback may be considered only when it uses the same validation, safety, cost and latency controls as batch generation.
+
+### Validation and release gates
+
+A model response is an untrusted draft, never a ready-to-serve question. Before publication, enforce:
+1. Strict structured-output/schema and size limits.
+2. Factual consistency against the supplied source/fact, with a defined confidence/abstention policy.
+3. Exactly one defensible correct answer; plausible but unambiguous distractors.
+4. Explanation consistency with the source and answer.
+5. Difficulty, language, category and age/safety suitability checks.
+6. Duplicate, semantic-similarity and question-family checks, including cross-batch deduplication.
+7. Provenance, freshness/validity window, licensing/attribution and content-access metadata.
+8. Human review for sensitive, low-confidence, disputed, time-sensitive or high-impact material; define category-specific review sampling before launch.
+
+Reject, quarantine or regenerate failures with bounded retries. Never silently relax validation to fill a requested question count. Log model/version, prompt/template version, source references, validation outcomes and token/usage/cost metadata without logging secrets or unnecessary personal data.
+
+### Cost, reliability and abuse controls
+
+- Establish per-job and per-category budgets, token/output caps, concurrency limits, queue back-pressure, timeouts, retries with jitter, circuit breakers and daily spend alerts.
+- Cache deterministic/reusable outputs only where source freshness and rights permit; do not serve stale Current Affairs or news content beyond its validity rules.
+- Monitor latency, failure rates, acceptance/rejection rates, factual-error reports, duplicate rates and cost per accepted question.
+- Keep a deterministic/provider fallback path where practical. AI outage must not make the whole app unusable if approved questions are available.
+- Evaluate provider terms, data handling, retention, regional availability, rate limits and current pricing before production use.
+
+### Scale strategy
+
+A target of one million or more questions is a content ambition, not a requirement to generate or store them in one operation. Grow the bank incrementally with category quotas, source coverage, quality gates, deduplication and usage analytics. D1 is not automatically the best store for every future content-scale workload: benchmark D1 for metadata/serving needs and evaluate object storage or other search/indexing services only when measured requirements justify them.
+
+### V2 AI deliverables
+
+The AI technical evaluation, model/provider adapter, generation contracts, queue/staging design, validation pipeline, observability and cost controls belong to project.md Stage 7. Integrating approved AI-generated content into quiz sessions belongs to Stage 9. No V2 AI binding, model, queue or production route is implied as already configured.
+
+## 14. Architecture change control
 
 - This document describes Daily Quiz & Challenge only.
-- Superseded V2 backend proposals must not be reintroduced as current infrastructure.
+- Do not reintroduce retired proposals as current infrastructure; consult project.md for the approved V2 direction.
 - RichInsights is a separate product/repository; do not copy its backend or modify its code as part of Daily Quiz work.
 - Keep confirmed implementation, planned work and proposals explicitly labelled.
 - Update this document whenever Worker routes, provider credentials, storage bindings, authentication, scoring or billing boundaries change.
 
 
-## V2 target architecture and account/security plan — 3 November 2026
+## V2 target architecture and account/security plan
 
 **Status: approved target direction; not implemented or deployed.** The current V1 facts above remain unchanged. V2 uses native Kotlin/Compose and Cloudflare remains the primary backend platform.
 
@@ -258,7 +301,7 @@ The existing Worker and provider adapters remain the starting point. V2 should i
 - Challenge participation and leaderboard queries.
 - Future entitlement and purchase verification.
 
-Exact endpoint names, request/response schemas, token format, database schema and deployment topology must be approved in Phase 1 before implementation. Existing V1 `/api/health` and `/api/questions` contracts must remain compatible during V2 development.
+Exact endpoint names, request/response schemas, token format, database schema and deployment topology must be approved through project.md Stage 7 before implementation. Existing V1 `/api/health` and `/api/questions` contracts must remain compatible during V2 development.
 
 ### Cloudflare persistence evaluation
 
@@ -282,7 +325,7 @@ The current V1 client receives `correctAnswer` and stores streak/best-score valu
 
 Initial competition remains non-cash. Do not add cash prizes or valuable rewards until scoring, fraud controls, auditability and applicable policy/legal requirements are separately reviewed.
 
-### Phase 1 backend deliverables
+### Backend architecture deliverables
 
 1. Inventory and contract documentation for existing Worker routes and provider adapters.
 2. V2 API versioning and endpoint contract proposal.
@@ -293,5 +336,5 @@ Initial competition remains non-cash. Do not add cash prizes or valuable rewards
 7. Rate-limit, abuse, monitoring, backup and recovery requirements.
 8. Migration/compatibility strategy that preserves V1.
 
-No account service, D1 binding, new production endpoint or V1 route change is implied by this planning document.
+No account service, D1 binding, AI model binding, generation queue, new production endpoint or V1 route change is implied by this planning document. Project-wide sequencing is governed by project.md.
 
