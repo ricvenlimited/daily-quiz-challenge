@@ -8,7 +8,7 @@ The V1 **Current Affairs** category is a structured knowledge system, not a live
 
 It must cover current civic/general knowledge across Nigeria, Africa and the wider world, including government, institutions, geography, economy, international organizations, sports, science and technology.
 
-A separate future product, **News Quiz / Current Events**, may use NewsData.io or another news provider for actual recent-news questions. That system must remain isolated from the V1 Current Affairs knowledge system.
+**News Quiz / Current Events** is a separate V1 route using NewsData.io for recent-news questions. Its provider, article records and generation pipeline must remain isolated from the fact-first Current Affairs system. Any V2 navigation/entry decision remains open in project.md.
 
 ## 2. Isolation boundary: Current Affairs vs News Quiz
 
@@ -30,7 +30,7 @@ Existing Question Engine
 10-question quiz
 ```
 
-### Future News Quiz / Current Events
+### News Quiz / Current Events
 
 ```text
 NewsData.io (or future news provider)
