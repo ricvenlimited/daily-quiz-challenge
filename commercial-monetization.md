@@ -8,7 +8,7 @@ The eight Current Affairs domains are: Nigeria, Africa, World, International Org
 
 **File:** `commercial-monetization.md`  
 **Status:** Strategic product specification — planned, not yet fully implemented. Africa & Nigeria is production-verified; Current Affairs is the remaining V1 content implementation target. Bible commercial/product architecture is planned for the future native Android experience; commercial implementation remains deferred until the V1 foundation and later account/entitlement architecture are ready.  
-**Purpose:** Single source of truth for the commercial, premium, advertising, entitlement, and revenue architecture of Daily Quiz & Challenge.
+**Purpose:** Sole authority for the commercial model, Premium, advertising, entitlements, billing, pricing, provider licensing and AI-generation cost controls. Overall production sequencing is owned by project.md.
 
 ---
 
@@ -930,6 +930,20 @@ Revenue should eventually pay for:
 
 ---
 
+## AI generation economics and commercial controls
+
+AI-assisted question generation is a core V2 content capability, not a direct user-facing paid feature by default. Its cost must be managed as a content-supply and operating expense, while preserving a useful free experience.
+
+- Cloudflare Workers AI is the first native model option to evaluate; AI Gateway may be used to observe, cache, rate-limit and route requests, including to external providers if justified.
+- Prefer controlled batch generation and reuse of validated question-bank content over generating a fresh question for every play. Runtime generation is a bounded fallback, not the default serving path.
+- Track cost per generated draft and, more importantly, cost per accepted/approved question and per served quiz. Include retries, failed validation and review effort in the cost model.
+- Apply category and job budgets, output/token caps, concurrency limits, caching where freshness permits, duplicate suppression, spend alerts and back-pressure.
+- Model/provider choice must consider factual quality, acceptance rate, latency, availability, terms, data handling and current pricing—not just the lowest token price.
+- Keep the AI content pipeline independent of billing and entitlements. Premium access may determine which approved content a user can access, but it must never bypass validation or source/rights checks.
+- Any future premium AI-personalized explanation, tutoring or user-specific generation is a separate product decision and must be priced, privacy-reviewed and rate-limited before release.
+
+The backend document owns implementation and security; project.md owns the stage sequence. This section owns only commercial cost and product-economics rules.
+
 # 28. Licensing and commercial rights
 
 A provider is not automatically suitable simply because it has an API.
@@ -1276,49 +1290,16 @@ A successful commercial product should allow:
 
 ---
 
-# 39. Relationship with other project documents
+## 39. Relationship with other project documents
 
-This document complements, rather than replaces, the other project documentation.
+- `project.md` owns the V2 roadmap, production stages and overall status.
+- `ui-ux-project.md` owns commercial feature presentation and all UX decisions.
+- `v2-native-architecture.md` owns Android implementation architecture.
+- `backend-architecture.md` owns Cloudflare services, APIs, security, AI inference/generation pipeline and backend entitlement enforcement.
+- `database-architecture-v2.md` owns schema, question provenance, validation metadata and data integrity.
+- This document alone owns pricing, advertising policy, Premium/Store, billing, entitlements, licensing and AI-generation economics.
 
-### `project.md`
-
-The technical project checkpoint:
-
-- Current milestone.
-- What has been built.
-- What works.
-- What was tested.
-- Immediate next step.
-- Important implementation history.
-
-### `ui-ux-project.md`
-
-The visual/product experience blueprint:
-
-- UI/UX direction.
-- Screens.
-- Navigation.
-- Components.
-- Visual hierarchy.
-- User experience improvements.
-
-### `commercial-monetization.md`
-
-The business and commercial blueprint:
-
-- Free vs Premium.
-- Ads.
-- Subscriptions.
-- Purchases.
-- Premium categories.
-- Entitlements.
-- Commercial architecture.
-- Revenue strategy.
-- Long-term monetization.
-
-All three documents should remain consistent.
-
----
+Do not reproduce the project roadmap or detailed backend/data architecture here. Domain-specific commercial acceptance criteria remain here; project-wide sequencing is in project.md.
 
 # 40. Final commercial vision
 
@@ -1365,9 +1346,9 @@ The guiding principle remains:
 **Pricing:** Not yet decided  
 **Google Play Billing:** Future  
 **Provider licensing:** Ongoing research  
-**UI/UX Premium screens:** Future Figma work  
+**UI/UX Premium screens:** Designed in Penpot as part of V2 UX work  
 **V1.1.4:** Africa & Nigeria is production-verified; the existing AdMob architecture is preserved and release builds now use production ad IDs  
-**V2:** Remains paused
+**V2:** Active documentation and design planning; implementation status is tracked in project.md
 
 This document is the working commercial blueprint and should be updated whenever a major monetization decision is made.
 
@@ -1564,7 +1545,7 @@ V2 account and entitlement design must align with the approved Cloudflare backen
 - Entitlements should be centralized and server-authoritative, with clear expiry, cancellation, refund, pending and restore behavior.
 - Ad removal, Premium, Bible access, Current Affairs access and other content/feature entitlements remain distinct products or permissions as specified by the final commercial design.
 
-Native AdMob integration is a V2 implementation task in Phase 8 of `v2-native-architecture.md`; the existing V1 AdMob implementation must remain untouched while V2 is developed.
+Native AdMob implementation belongs to project.md Stage 10. The existing V1 AdMob implementation must remain untouched while V2 is developed.
 
 The five V2 primary navigation destinations are Home, Explore, Challenges, Rankings and Profile. Commercial entry points such as Premium/Store, purchase management and entitlement details should be nested within appropriate destinations (typically Profile or relevant locked content), not added as additional primary navigation tabs.
 
