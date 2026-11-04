@@ -1,7 +1,6 @@
 # Current Affairs Architecture & Source Registry
 
-**Last updated:** 23 September 2026  
-**Status:** Phase 1 — architecture, domains, fact schema, source registry and verification rules defined. Implementation has **not** started.
+**Status:** V1 Current Affairs pipeline implemented and production-verified at the documented stabilization checkpoint. V2 content architecture extends it with controlled AI-assisted generation.
 
 ## 1. Purpose
 
@@ -393,210 +392,72 @@ Conceptual ID: `ca:<fact-id>:<template>:<generation-version>`
 
 This allows the existing `recent_history` system to prevent repeats while still allowing a changed fact to produce a new valid question version.
 
-## 12. Implementation phases
+## 12. Content pipeline and readiness
 
-### Phase 1 — architecture and registry
-**Current phase**
-- source registry
-- domain model
-- fact schema
-- verification/update rules
-- isolation boundary
+The Current Affairs content lifecycle is:
 
-### Phase 2 — knowledge ingestion
-- build initial verified fact datasets
-- normalize sources
-- record provenance
-- create update/supersession logic
+**Source discovery → verified fact ingestion → normalized fact/source registry → question blueprint and generation → distractor construction → quality/freshness validation → duplicate/family checks → approved Question Bank → quiz assembly and serving.**
 
-### Phase 3 — question generation
-- templates
-- distractor generation
-- difficulty assignment
-- question IDs
+This is a content lifecycle, not a competing project roadmap. Project-wide sequencing is owned by project.md; generic Cloudflare AI service implementation is owned by backend-architecture.md.
 
-### Phase 4 — validation
-- answer uniqueness
-- semantic duplication checks
-- stale-fact checks
-- source/provenance checks
+## 13. Scope boundaries
 
-### Phase 5 — Worker integration
-- add `current_affairs` route to the new service
-- preserve existing category routes
-- keep NewsData behind future news-specific route
+- Keep Current Affairs fact-first and separate from News Quiz / Current Events.
+- Do not replace verified facts with model-generated claims.
+- Do not use NewsData or other live-news article feeds as the Current Affairs fact source.
+- Keep user recent-question history separate from the Question Bank.
+- Do not expose source IDs, fact IDs, question-family IDs or generation metadata in ordinary gameplay.
+- Preserve V1 routes and category behavior while V2 is developed.
+- Keep billing and entitlement enforcement outside the content generator.
 
-### Phase 6 — phone/debug testing
-- Worker endpoint tests
-- category tests
-- Easy/Medium/Hard
-- repetition tests
-- offline/error-state tests
+## 14. Content acceptance criteria
 
-### Phase 7 — production stabilization
-- signed release
-- update validation
-- monitor source freshness and errors
+A Current Affairs question is eligible for serving only when:
 
-## 13. Non-goals for Phase 1
+- Its underlying fact has an authoritative source and valid provenance.
+- Time-sensitive values have verification and validity dates; numeric statistics carry a reference period and dataset vintage.
+- The correct answer is uniquely defensible and distractors are plausible but incorrect.
+- Wording is neutral, clear and unambiguous.
+- Difficulty reflects reasoning demand, not obscure trivia alone.
+- Exact, semantic and question-family duplicates are rejected or cooled down.
+- Superseded/stale facts and their dependent questions are retired or revalidated.
+- The question retains source/fact identity, generation/version metadata and validation outcome.
+- The assembler respects category/topic balance, difficulty, freshness and user history.
 
-Do not:
-- redesign the current V1 UI
-- modify AdMob
-- rewrite Science
-- rewrite General Knowledge
-- rewrite Africa & Nigeria
-- implement Google Play Billing
-- build the future native Bible UI
-- make NewsData the Current Affairs provider
-- add paid APIs merely for convenience
+## 15. V2 AI-assisted generation
 
-## 14. Definition of done for Phase 1
+AI is a required V2 generation capability and a major way to expand question variety and coverage. It supplements the verified fact-first system; it does not replace the source registry or become the authority for factual truth.
 
-Phase 1 is complete when:
-- the source registry is documented
-- all eight domains are defined
-- the fact schema is fixed enough for ingestion
-- verification/update rules are documented
-- Current Affairs and News Quiz are explicitly isolated
-- the three project documents reflect the same decision
-- no production category behavior has been changed merely by documentation work
-
-## 15. Next concrete implementation step
-
-After this documentation checkpoint, the next work should be **Phase 2: build the initial Current Affairs knowledge base**, starting with a small verified Nigeria/Africa/world dataset.
-
-Only after that dataset is validated should we implement the generator and connect `current_affairs` to the Worker.
-
-
-## 16. Phase 2 checkpoint — initial verified knowledge base
-
-Updated: 23 September 2026
-
-Phase 2 ingestion has now begun and the first verified seed is stored at:
-worker/current-affairs/data/phase2-initial-facts.js
-
-The seed currently covers:
-- Nigeria federal structure and current federal leadership.
-- All 36 Nigerian states, capitals and geopolitical zones.
-- FCT/Abuja and the 774-LGA administrative fact.
-- African Union and ECOWAS institutional facts.
-- United Nations and WHO institutional facts.
-- Nigerian economic institutions including the CBN and OPEC membership.
-- IMF and WTO institutional/economic facts.
-- Initial durable Olympic/sports facts plus a dated Dakar 2026 fact.
-
-### Phase 2 data rules
-
-Facts remain the source of truth. Questions are not being hand-written or generated yet.
-
-The dataset supports provenance and freshness through:
-- stable fact IDs
-- domain/topic/entity/attribute/value
-- validFrom / future validTo
-- lastVerified
-- source IDs
-- active/superseded status
-
-Dynamic statistics must add a reference period and dataset vintage before production use.
-
-### Commercial-aware content metadata
-
-The knowledge model is intentionally compatible with future monetization. A future optional field such as accessTier may classify content as free, premium, special_pack, or another entitlement without changing the fact model. No premium enforcement is implemented in Phase 2.
-
-### Verification caution
-
-Current officeholders, institutional leaders, membership counts and other changing facts are not permanent facts. They must be re-verified before a production refresh and superseded when an authoritative source changes.
-
-### Phase 2 remaining work
-
-1. Expand the verified dataset across all eight domains.
-2. Add more geography, institutional, economy, sports and science/technology facts.
-3. Add stronger source-registry coverage for remaining institutions.
-4. Add explicit update/supersession handling.
-5. Review the schema and future access-tier metadata.
-6. Validate the complete Phase 2 dataset.
-7. Only then begin Phase 3 question generation.
-
-Current status: Phase 2 — IN PROGRESS.
-
-
-## Phase 2 continuation checkpoint — 23 September 2026
-
-The knowledge seed has been deepened with additional Nigeria legislative/institutional facts, CBN functions, AU history/membership relationships, and World Bank/IMF/WTO institutional distinctions. A future-only access-tier metadata contract is also documented in the data layer; entitlement enforcement remains disabled.
-
-The next Phase 2 work remains systematic expansion across geography, economy, sports, and science/technology, followed by schema validation and supersession/update handling.
-
-## Phase 2 systematic expansion checkpoint — 23 September 2026
-
-The verified knowledge base has now been expanded across the remaining planned content areas before any Question Bank work begins. The expansion pass adds:
-
-- Nigeria: additional geography, international boundaries, Gulf of Guinea/Niger Delta context, economic institutions and core economic concepts.
-- Africa: additional physical geography, major regional institutions, AU/ECOWAS context, Sahara, Nile, Equator, Kilimanjaro and Great Rift Valley facts.
-- World geography: continents, oceans and basic Earth geography relationships.
-- Economy: inflation, GDP, central-bank policy concepts plus additional Nigeria/World Bank economic context.
-- International organizations: additional UN, WHO, UNICEF, UNESCO and ITU facts, with source-registry coverage expanded.
-- Sports: 2026 FIFA World Cup structure/hosts and World Athletics coverage in addition to Olympic facts.
-- Science & technology: ISS, Artemis II and international ICT/ITU facts.
-
-The expansion remains fact-first. No question generator, Question Bank, or production Current Affairs quiz route has been introduced yet.
-
-### Source rule
-
-The new records use an expanded source registry. Primary institutional sources remain preferred for current/institutional facts; trusted reference material is used for durable geography where an official institutional dataset is not the appropriate source.
-
-### Next step
-
-Finish the Phase 2 audit: verify dataset completeness, source IDs, schema consistency, freshness/update handling and supersession rules. Only after that audit should Phase 3 question generation begin. Question Bank design remains deliberately deferred until the expansion/audit is complete.
-
-## Phase 2 audit checkpoint — 23 September 2026
-
-The Phase 2 audit found that the earlier expansion pass was not yet complete: Sports and Science & Technology coverage had not been fully inserted into the fact array, and one ECOWAS source ID needed normalization. These issues were corrected in the knowledge-base file. The current audit confirms a fact-first dataset with complete required fields for the active records, no duplicate fact IDs, and source references normalized to the source registry. Phase 2 remains in final validation rather than being declared production-complete until the full source/freshness/content-coverage review is finished.
-
-## Final Phase 2 audit — 23 September 2026
-
-Final structural audit completed after the expansion corrections. The Current Affairs fact dataset now contains 86 active records across all seven implemented expansion areas represented in the Phase 2 scope: Nigeria (48), Africa (9), Economy (9), Sports (6), World (5), International Organizations (3), and Science & Technology (6). Every fact contains the required core fields, no duplicate fact IDs were found, every referenced source ID resolves to the source registry, the JavaScript array/export structure is intact, and no future-dated verification metadata was detected. Current officeholder/institutional and dated-event facts remain subject to freshness review before serving. Phase 2 content expansion is therefore complete and the dataset is ready to move to the next controlled stage: Phase 3 question-generation design/implementation. The Question Bank remains a later stage and is not being mixed into this audit.
-
-## NewsData isolation completed — 24 September 2026
-
-The NewsData integration has now been removed from the V1 `current_affairs` execution path.
-
-### Separation implemented
-
-- `worker/index.js` no longer contains the NewsData provider URL or NewsData article-fetching/generation implementation.
-- `current_affairs` no longer calls NewsData.
-- The V1 `current_affairs` route is intentionally disconnected while the fact-first Phase 3 question system is being built.
-- A separate `news_quiz` route now owns the future live-news path.
-- NewsData-specific modules are isolated under:
-  - `worker/news-quiz/provider.js`
-  - `worker/news-quiz/validator.js`
-  - `worker/news-quiz/generator.js`
-  - `worker/news-quiz/index.js`
-- The NewsData API secret remains a Worker secret because it belongs to the future News Quiz product; it is no longer part of Current Affairs logic.
-
-This is a deliberate temporary state: **Current Affairs is fact-first and News Quiz is live-news-first.** The existing V1 app should not be treated as having a finished Current Affairs provider until Phase 3 is implemented and tested.
-
-### Isolation boundary
+**V2 flow:**
 
 ```text
-V1 Current Affairs
-    ↓
-Verified Current Affairs Facts
-    ↓
-Phase 3 Question System
-    ↓
-Current Affairs Quiz
-
-Separate future product:
-
-NewsData.io
-    ↓
-worker/news-quiz/*
-    ↓
-Future News Quiz / Current Events
+Verified Current Affairs facts + trusted source context
+                    ↓
+        AI-assisted question drafting
+                    ↓
+       Deterministic and AI-assisted checks
+                    ↓
+  Answer/distractor/explanation/freshness validation
+                    ↓
+      Duplicate and question-family checks
+                    ↓
+         Review where risk requires it
+                    ↓
+          Approved Question Bank
+                    ↓
+              Quiz serving
 ```
 
-No provider-specific NewsData parsing, article validation, or question generation is shared with the Current Affairs system.
+- Ground every factual draft in one or more approved fact records and preserve their source references.
+- AI may propose alternative question forms, explanations, difficulty variants and distractors; it must not invent unsupported facts, dates, officeholders or statistics.
+- Validate the output against the underlying fact and current source. A model's confidence or a second model's agreement is not sufficient evidence by itself.
+- Quarantine low-confidence, ambiguous, disputed, political, rapidly changing or otherwise sensitive material for human review.
+- Keep a fact's validity window attached to every dependent question. When a fact changes, retire or revalidate all affected variants.
+- Preserve concept/family identity across paraphrases so AI-generated variations do not appear as new concepts or repeat in the same quiz.
+- Batch-generate into a staging area. Runtime AI generation is a controlled fallback only; never bypass the same gates to fill a quiz.
+- Keep model, prompt-template, source and validation metadata for auditability. Do not store secrets or private model reasoning.
+
+News Quiz remains separate: AI-generated questions must be grounded in the specific retrieved article, preserve article URL/source/time context, and expire according to the article's freshness policy.
 
 ## Phase 3 — Question-generation architecture and plan
 
@@ -816,405 +677,15 @@ Do not replace the verified fact database with generated questions. Facts remain
 
 
 
-## Phase 3A implementation checkpoint — 24 September 2026
+## 16. V1 implementation record
 
-Phase 3A has now been implemented as a **data-contract layer only**. No question generation, distractor generation, quiz assembly or production Current Affairs integration has been started.
+The V1 Current Affairs implementation was completed for the 24 September 2026 stabilization checkpoint:
 
-New file:
-`worker/current-affairs/data/phase3a-question-model.js`
+- Verified fact-first knowledge base and source/provenance model.
+- Question blueprints, deterministic generation, distractors, quality validation, duplicate/family detection and quiz assembly.
+- Question Bank management and Worker serving integration.
+- Request-scoped runtime recovery when recent-history filtering exhausts the seeded pool.
+- Regression testing preserved separation from NewsData and existing categories.
+- Recent-history exhaustion testing returned a complete 10-question quiz without re-serving the supplied recent-history IDs.
 
-The model defines:
-
-- Supported question variant types.
-- Easy/Medium/Hard difficulty values.
-- Question lifecycle statuses.
-- Explicit rejection reasons.
-- Future access-tier metadata (`FREE`, `PREMIUM`, `SPECIAL_PACK`) without entitlement enforcement.
-- Concept records that connect knowledge relationships to verified fact IDs.
-- Question-family records that group substantially equivalent variants.
-- Canonical Question Bank question records with fact provenance.
-- Structural question validation.
-- A question-family selection key for later quiz assembly.
-
-### Important anti-repetition rule
-
-A question's wording is not its complete identity.
-
-```text
-Fact
- ↓
-Concept
- ↓
-Question Family
- ↓
-Question Variant
-```
-
-For example, direct and reverse questions about Nigeria's capital share the same family and therefore cannot both be selected into one 10-question quiz.
-
-Phase 3A deliberately does **not** perform semantic similarity detection yet. That belongs to Phase 3F. It also does not decide whether a question is factually correct; that belongs to the later validation stages.
-
-### Phase 3A safety boundary
-
-The verified Phase 2 fact database remains the source of truth. The new model references facts by `factIds`; it does not copy or replace the fact database.
-
-The Question Bank remains conceptually separate from `recent_history` user history.
-
-**Phase 3A status: implementation complete.**
-
-Next: review/validate the Phase 3A model, then proceed to Phase 3B — the question blueprint/template system.
-
-
-## Phase 3B implementation checkpoint — 24 September 2026
-
-Phase 3B has now been implemented as the **Question Blueprint / Template System**. The blueprint layer defines controlled, reusable construction patterns between the verified fact/concept model and the future question generator.
-
-New file:
-`worker/current-affairs/data/phase3b-question-blueprints.js`
-
-The blueprint registry currently defines 12 supported construction patterns:
-- Direct attribute
-- Reverse attribute
-- Identification
-- Classification
-- Relationship
-- Institution/function
-- Comparison
-- Number/count
-- Chronology/date
-- Matching
-- Scenario/application
-- Odd-one-out
-- Multi-fact reasoning
-
-Each blueprint records its supported input shape, answer role, difficulty range, distractor strategy, family identity guidance, prompt intent and safety constraints. The blueprint layer therefore controls **how** questions may be constructed without generating the questions itself.
-
-### Phase 3B safety boundary
-
-Phase 3B does **not**:
-- generate question wording
-- generate distractors
-- decide factual correctness
-- perform semantic similarity detection
-- assemble quizzes
-- connect Current Affairs to the production Worker
-- enforce Premium/FREE entitlements
-
-The verified Phase 2 fact database remains the source of truth, while Phase 3A remains the canonical question/family data contract.
-
-### Important generation rule
-
-A blueprint may only use relationships supported by the verified fact model. It must not invent facts merely to make a question harder. Dynamic numeric facts require their reference period/dataset context, and scenario/multi-fact questions must derive their conclusions from supplied verified facts.
-
-**Phase 3B status: implementation complete.**
-
-Next: Phase 3C — Question Generator.
-
-
-## Phase 3C implementation checkpoint — 24 September 2026
-
-Phase 3C — **Question Generator** is now implemented as a deterministic, fact-first draft generator in:
-
-`worker/current-affairs/data/phase3c-question-generator.js`
-
-### Generator responsibilities
-
-The generator converts verified Phase 2 facts and approved Phase 3B blueprints into structured **question drafts**. Each draft carries:
-- verified `factIds` and `sourceIds`
-- stable `conceptId` and `questionFamilyId`
-- blueprint and variant type
-- difficulty
-- domain/topic
-- question text
-- correct answer
-- temporal context where relevant
-- generator version
-- future access-tier metadata
-
-### Efficiency and safety controls
-
-- Deterministic generation; no external API dependency.
-- Bounded batch generation through `maxDrafts`.
-- Blueprint/difficulty compatibility checks before generation.
-- Required fact-shape checks prevent incomplete facts from entering generation.
-- Direct/reverse/identification variants share the same underlying entity/attribute family identity.
-- Generic facts are not treated as classifications unless an explicit classification field such as `region` is present.
-- Batch-level fingerprinting prevents the generator itself from emitting the same question/answer/family combination more than once.
-- Relationship, comparison, matching, scenario, odd-one-out and multi-fact forms require explicit context rather than inventing relationships from unrelated facts.
-- No distractors are generated in Phase 3C; `options` remains null until Phase 3D.
-
-### Deliberate boundary
-
-Phase 3C does **not** perform final factual validation, semantic duplicate detection, distractor generation, quiz assembly or Worker integration. A generated draft is not automatically trusted or activated.
-
-**Phase 3C status: implementation complete.**
-
-Next: **Phase 3D — Distractor Generator**, followed by the quality validation and duplicate/family stages.
-
-
-## Phase 3D implementation checkpoint — 24 September 2026
-
-Phase 3D — **Distractor Generator** is now implemented in `worker/current-affairs/data/phase3d-distractor-generator.js`.
-
-The system generates exactly three distractor candidates for a Phase 3C draft by searching the verified fact pool and ranking candidates by semantic proximity: same attribute first, then same topic/domain where appropriate. It never manufactures unsupported factual answers when the verified pool is insufficient.
-
-### Distractor safety and efficiency
-
-- Correct answers are always excluded.
-- Duplicate options are removed deterministically.
-- Candidate provenance records the supporting fact ID and selection strategy.
-- Candidate type is matched to the question variant where the answer is an entity, value, number or date.
-- Relationship/comparison/scenario/multi-fact style questions require explicit candidate context instead of inferred relationships.
-- If fewer than three sufficiently supported distractors exist, generation fails safely rather than padding the question with weak or invented options.
-- Batch processing has an explicit cap for predictable Worker execution.
-
-Phase 3D only supplies distractor candidates; it does not decide final correctness, option quality, semantic uniqueness or activation. Phase 3E remains responsible for final quality validation.
-
-**Phase 3D status: implementation complete.**
-
-Next: **Phase 3E — Quality Validator.**
-
-
-## Phase 3E implementation checkpoint — 24 September 2026
-
-Phase 3E — **Quality Validator** is now implemented in `worker/current-affairs/data/phase3e-quality-validator.js`.
-
-This is the final quality gate before a generated question can be promoted to the validated Question Bank state. It checks structural validity, four-option integrity, exactly one correct answer, fact/source provenance, freshness metadata, question wording, unsupported/subjective language, political neutrality, difficulty consistency and access-tier validity.
-
-### Conservative quality policy
-
-The validator prefers rejection over questionable content. It never silently repairs an invalid question. Missing explanation is currently a warning rather than a rejection because explanation requirements can differ by quiz mode.
-
-Current-officeholder facts receive additional freshness scrutiny. Political/civic questions are allowed when factual and neutral, while persuasive or unsupported evaluative wording is rejected.
-
-Phase 3E deliberately does not perform semantic similarity or question-family duplicate detection; those remain Phase 3F responsibilities. Batch validation is explicitly bounded for predictable Worker execution.
-
-**Phase 3E status: implementation complete.**
-
-Next: **Phase 3F — Duplicate / Family Detection.**
-
-
-## Phase 3F implementation checkpoint — 24 September 2026
-
-Phase 3F — **Duplicate / Family Detection** is now implemented in `worker/current-affairs/data/phase3f-duplicate-family-detector.js`.
-
-The anti-repetition system now has multiple deterministic protection layers:
-
-1. Exact question-text duplicate detection.
-2. Canonical concept + answer + variant identity detection.
-3. Question-family blocking.
-4. Concept/fact-provenance duplicate detection.
-5. Conservative wording-similarity review signal for differently worded questions.
-6. Same-family blocking within a single quiz.
-7. Optional same-concept blocking within a single quiz.
-8. Question, family and concept cooldowns against recent user history.
-
-Wording similarity is deliberately a **review signal**, not an automatic rejection, because common words can produce false positives. Provenance, concept and family identity remain the authoritative anti-repetition mechanisms.
-
-The module also provides a deterministic eligible-question filter and a Question Bank audit helper. Randomization remains outside this module so eligibility decisions remain reproducible and testable.
-
-**Phase 3F status: implementation complete.**
-
-Next: **Phase 3G — Quiz Assembler.**
-
-
-## Phase 3G implementation checkpoint — 24 September 2026
-
-Phase 3G — **Quiz Assembler** is now implemented in:
-
-worker/current-affairs/data/phase3g-quiz-assembler.js
-
-The assembler builds a playable quiz from serving-safe Question Bank records while keeping content generation, validation and user history separate. Its default target is exactly 10 questions.
-
-### Assembly rules
-- Only active Question Bank records are eligible for serving. Generated/unvalidated drafts cannot bypass the quality pipeline.
-- Recent user history is filtered before selection using question ID, question-family ID and concept ID cooldowns.
-- A question family can appear only once in a quiz.
-- The same concept is blocked by default within one quiz.
-- Difficulty is targeted at Easy 4 / Medium 4 / Hard 2 by default, while allowing configurable targets.
-- Domain, topic and question-variant concentration are limited so one area does not dominate a quiz.
-- Selection uses deterministic seeded ordering, making tests reproducible while still allowing different seeds for different sessions.
-- If distribution limits prevent completion, the assembler may relax only distribution limits; family/concept anti-repetition rules are never relaxed.
-- If fewer than the requested number of eligible questions remain, the assembler fails explicitly instead of serving a shorter or unsafe quiz.
-
-### Phase 3G boundary
-Phase 3G does not generate questions, generate distractors, validate facts, persist the Question Bank, write user history, enforce billing, or connect the Worker route. Those responsibilities remain separate.
-
-The intended serving pipeline is now:
-
-Verified Facts → Generation → Distractors → Quality Validation → Duplicate/Family Detection → Question Bank → Quiz Assembler → Quiz → User History
-
-The Question Bank remains a dedicated content-management layer and is not being replaced by the assembler.
-
-**Phase 3G status: implementation complete.**
-
-Next: **Phase 3H — Worker integration.**
-
-## Phase 3 Question Bank checkpoint — 24 September 2026
-
-A sequencing correction is now recorded: **Phase 3G — Quiz Assembler is complete, but the actual persistent Question Bank storage/management layer is not yet implemented.**
-
-Phase 3G consumes the Question Bank conceptually, but it does not create, persist, populate or manage the bank. Therefore the project must complete the Question Bank layer **before Worker integration**.
-
-### Correct Phase 3 sequence
-
-- Phase 3A — Question data model & concept/family model — complete
-- Phase 3B — Question blueprint/template system — complete
-- Phase 3C — Question generator — complete
-- Phase 3D — Distractor generator — complete
-- Phase 3E — Quality validator — complete
-- Phase 3F — Duplicate/family detection — complete
-- Phase 3G — Quiz assembler — complete
-- **Phase 3H — Question Bank Storage & Management — next**
-- Phase 3I — Worker integration — pending
-- Phase 3J — Android/debug testing — pending
-- Phase 3K — Stabilization — pending
-
-### Required serving architecture
-
-Verified Facts → Question Generation → Distractors → Quality Validation → Duplicate/Family Detection → Question Bank → Quiz Assembler → Worker → Android App → User History
-
-The Question Bank must remain separate from `recent_history`. It is the application's curated content store; `recent_history` belongs to individual users and records what they have seen.
-
-### Phase 3H planning boundary
-
-The next stage will first plan the Question Bank storage and management layer before implementation. Planning must determine the canonical storage format and location, promotion rules for validated questions, stable IDs and versioning, active/retired/superseded lifecycle handling, provenance and source retention, freshness/revalidation handling for dynamic facts, family/concept indexing for anti-repetition, audit/integrity checks, safe population from the existing 86 verified Phase 2 facts and Phase 3 pipeline, future access-tier metadata without billing implementation, and maintainability without making the bank a runtime bottleneck.
-
-No Current Affairs Worker route should consume this bank until the Question Bank stage has been implemented and audited.
-
-## Phase 3H general checkpoint — 24 September 2026
-
-Phase 3H — **Question Bank Storage & Management** is now implemented through 3H-A to 3H-E.
-
-### 3H-A — Question Bank contract
-Implemented in `worker/current-affairs/data/phase3h-question-bank.js`. The contract defines stable question identity, provenance, lifecycle, temporal metadata, generator version, validation metadata and future access-tier metadata. Question Bank lifecycle states are `validated`, `active`, `superseded` and `retired`.
-
-### 3H-B — Question Bank manager
-The Question Bank manager provides controlled add/get/list/update/promote/retire/supersede operations, fact/source lookup, statistics, audit and snapshots. Core identity fields are protected from casual mutation. The manager is storage-independent so a later persistent backend can be introduced without redesigning the content contract.
-
-### 3H-C — Population pipeline
-The controlled population flow is:
-`Phase 2 facts → 3C drafts → 3D distractors → 3E quality gate → 3F duplicate/family gate → 3H Question Bank`.
-
-Population is bounded and deterministic. Initial population defaults to one accepted variant per question family to avoid filling the bank with equivalent variants. Rejected candidates retain explicit reasons. The pipeline does not connect to the Android app, production Worker route, NewsData, billing or AdMob.
-
-### 3H-D — Audit system
-A read-only Question Bank audit now checks contract validity, duplicate IDs, fact/source provenance, fact references, inactive dependencies, freshness metadata for dynamic facts, family collisions and duplicate/possible-duplicate signals. It reports issues without silently repairing or activating records.
-
-### 3H-E — Phase 3G integration tests
-A deterministic integration test verifies that an active Question Bank can safely feed the 3G assembler: exactly 10 questions, unique families/concepts, 4 Easy/4 Medium/2 Hard distribution, recent-history cooldown, access-tier filtering and rejection of non-serving records.
-
-### Storage decision
-The first implementation remains storage-independent and does not introduce D1/KV/Firebase or paid infrastructure. A persistent backend can be evaluated later while preserving the Question Bank contract.
-
-### Current Phase 3 status
-**3A → 3B → 3C → 3D → 3E → 3F → 3G → 3H-A → 3H-B → 3H-C → 3H-D → 3H-E: COMPLETE.**
-
-The next controlled stage is **3I — Worker Integration**. Before production serving, the populated Question Bank must be generated/inspected and the Worker route connected without reintroducing NewsData into Current Affairs.
-
-
-## Phase 3I-A / 3I-B Worker + Question Bank checkpoint — 24 September 2026
-
-Phase 3I-A Worker integration is implemented in `worker/current-affairs/index.js` and connected through `worker/index.js`. The Current Affairs request path now follows:
-
-`Worker request → audited Question Bank → access-tier filter → recent-history cooldown → Phase 3G assembler → public quiz response → Android`
-
-The Current Affairs route no longer returns the old disconnected placeholder. It still has **no NewsData dependency**. NewsData remains isolated under `worker/news-quiz/` for the future live News Quiz product.
-
-Phase 3I-B now provides the first version-controlled serving Question Bank seed in `worker/current-affairs/data/phase3i-initial-question-bank.js`, exposed through `phase3i-question-bank.js`.
-
-Current serving-bank checkpoint:
-- 29 active FREE Question Bank records.
-- 12 Easy, 13 Medium, 4 Hard.
-- Unique question IDs, families and concepts.
-- Four-option records with the correct answer represented in the options.
-- Provenance and freshness metadata retained.
-- Variant diversity represented so the Phase 3G distribution rules can assemble a complete 10-question quiz.
-- No NewsData, billing, AdMob or unrelated category integration.
-
-A dedicated real-bank audit/serving-readiness test is implemented at `worker/current-affairs/data/phase3i-b-audit-test.js`. Static contract checks and deterministic selection simulation confirm that the current real bank can supply a complete 10-question quiz with the target **4 Easy / 4 Medium / 2 Hard** distribution when no history blocks eligible content, while recent-history filtering can still produce a complete 10-question session when sufficient content remains.
-
-The 3I-B population is intentionally a bounded first serving population, not a claim that all 86 Phase 2 facts have already become Question Bank records. Further bank expansion can continue through the existing 3C → 3D → 3E → 3F → 3H pipeline.
-
-**Current Affairs status: 3I-A complete; 3I-B serving seed + audit/readiness work complete. Next: 3J debug APK/end-to-end testing, followed by 3K stabilization.**
-
-## Phase 3J Step A runtime-generation checkpoint — 24 September 2026
-
-Step A is now implemented as the runtime bridge between the verified-fact database and the existing quiz assembler.
-
-The Current Affairs serving flow is now:
-
-Worker request → Audited Question Bank → enough fresh eligible questions?
-
-YES → assemble
-NO → Verified facts → 3C generation → 3D distractors → 3E validation → 3F duplicate gate → Runtime serving pool → 3G quiz assembly
-
-### Step A rules
-
-- The 86 verified facts remain the primary source of truth.
-- The Question Bank is a repository/cache/seed, not a hard ceiling.
-- Recent history can exhaust the current bank without making the category unavailable.
-- Runtime-generated questions are validated before they can enter the serving pool.
-- Multiple validated variants may share a question family in storage/generation; Phase 3G still allows only one family member per quiz.
-- Exact/canonical duplicates remain blocked.
-- Player-facing explanations do not expose internal fact IDs or source IDs.
-- Step A does not persist runtime-generated questions across Worker requests.
-
-### Step B boundary
-
-Cloudflare D1 is the planned persistent Question Bank layer. It is intentionally not added in Step A. Step B will persist validated runtime questions and allow the same generation/selection contract to reuse them across requests without changing the fact-first architecture.
-
-### NewsData and monetization
-
-NewsData remains isolated to the future News Quiz / Current Events product. No NewsData dependency was added to Current Affairs.
-
-Access tiers remain metadata-only. No billing, subscriptions, premium enforcement or paywalls were added.
-
-### Testing
-
-A dedicated Step A integration test now forces the audited bank into recent history and verifies that the runtime path can produce a fresh 10-question quiz with the required 4 Easy / 4 Medium / 2 Hard distribution.
-
-Phase 3J Step A status: IMPLEMENTED — deployment and debug end-to-end verification pending.
-
-
-## Worker Preview deployment checkpoint — 24 September 2026
-
-The Current Affairs runtime-coverage branch is now prepared for isolated Cloudflare Worker Preview testing.
-
-Preview/deployment configuration checkpoint:
-- Branch: `fix/current-affairs-runtime-coverage`.
-- Production branch remains `main`; no production deployment or merge is part of this checkpoint.
-- `package.json` includes Wrangler `^4.135.0`, satisfying the Worker Preview requirement.
-- `wrangler.toml` contains the `[previews]` configuration block.
-- Cloudflare Worker Previews has been enabled for the connected Worker.
-- Preview variables/secrets were configured separately from production, including the Preview Africa API secret required by the existing Africa category path.
-- The Preview command is `npx wrangler preview`; the existing production deploy command is intentionally unchanged.
-
-The purpose of this checkpoint is to trigger and verify an isolated Preview deployment of the Phase 3J runtime-coverage changes before any production release. Current Affairs application logic is unchanged by this documentation checkpoint.
-
-
-## Current Affairs implementation-complete checkpoint — 24 September 2026
-
-The V1 **Current Affairs category implementation is now complete for the current stabilization milestone**.
-
-Completed implementation chain:
-- Verified fact-first Current Affairs knowledge base and source/provenance model.
-- Phase 3A–3H question model, blueprints, generation, distractors, quality validation, duplicate/family detection, quiz assembly, and Question Bank management.
-- Phase 3I Worker integration and version-controlled serving Question Bank.
-- Phase 3J runtime generation/coverage path for recovery when recent-history filtering exhausts the seeded bank.
-- Current Affairs remains isolated from NewsData; NewsData is reserved for the future News Quiz / Current Events product.
-- Recent-history exhaustion testing successfully returned a complete 10-question quiz without re-serving the 20 supplied recent-history IDs.
-- Runtime exhaustion recovery is therefore considered functionally established for this V1 milestone.
-- The preferred 4 Easy / 4 Medium / 2 Hard distribution may relax when the available eligible pool is constrained by recent-history/exhaustion rules; anti-repeat protections remain in force.
-- Known Question Bank explanation/content cleanup items observed during testing are recorded as a later cleanup task and are **not** being changed in this checkpoint.
-
-### Next controlled release steps
-
-1. Merge the completed Current Affairs implementation pull request into `main`.
-2. Confirm the merged `main` state and production Worker deployment.
-3. Build the Android **Debug APK** from the merged state.
-4. Install/update the Debug APK on the test phone.
-5. Run end-to-end V1 category testing, with Current Affairs included, while protecting the already-confirmed Science, General Knowledge, Africa & Nigeria and AdMob behavior.
-6. Record any findings as stabilization fixes only; do not begin the major native Android/UI redesign during this test cycle.
-
-**Current milestone:** Current Affairs implementation complete → PR merge → Debug APK validation → V1 stabilization.
+These are historical V1 implementation facts. They do not mean V2 AI services, D1 persistence or new production endpoints are implemented.
