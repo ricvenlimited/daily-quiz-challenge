@@ -2,7 +2,7 @@
 
 ## V2 architecture decision — 3 November 2026
 
-**Current V2 status:** Phase 1 architecture/documentation planning. Native Android V2 is approved as a separate development stream. This is a target architecture and roadmap, not implemented application functionality.
+**Current V2 status:** Architecture baseline established; the next milestone is brand identity and native UI/UX design. Native Android V2 is approved as a separate development stream. This is a target architecture and roadmap, not implemented application functionality.
 
 - **V1 stable baseline:** `main`; preserve the existing React + TypeScript + Vite + Capacitor 8.4.2 app, package identity, signing continuity, working AdMob integration and production behavior.
 - **Documentation alignment baseline:** `docs/project-documentation-realignment`.
@@ -15,19 +15,21 @@
 - **Trust boundary:** V2 quiz answers, scores, streak awards and leaderboard results must be server-authoritative; V1's client-visible answer key/local score behavior remains a documented V1 limitation.
 - **No merge to `main`:** do not merge V2 or alter V1 production behavior during V2 development. Any eventual production migration requires explicit review and approval.
 
-**Approved implementation phases:**
-1. Architecture and documentation.
-2. Native Android foundation.
-3. Navigation and screen development.
-4. User accounts and authentication.
-5. Cloudflare backend integration.
-6. Quiz and learning experience.
-7. Challenges and rankings.
-8. Monetization and release testing.
+**Approved V2 implementation order (design-first):**
+1. Architecture/documentation baseline.
+2. Brand identity and visual foundation: app icon, logo, adaptive icon, splash, Royal Navy palette, light/dark themes and reusable design tokens.
+3. Navigation and complete user journeys, including an optional skippable first-launch tutorial and early design of sign-in/registration screens.
+4. Penpot wireframes, high-fidelity screens and interactive prototype.
+5. Native Kotlin/Jetpack Compose foundation and brand implementation.
+6. Native screen implementation, including the already-designed account screens.
+7. Cloudflare V2 backend foundation.
+8. Email/password and Google authentication integration.
+9. Quiz/learning, challenges and rankings.
+10. Monetization, stabilization and release testing.
 
 Detailed architecture, security requirements, API boundaries, data domains, phase deliverables and exit criteria are in [`v2-native-architecture.md`](v2-native-architecture.md). The approved five-destination UX and navigation specification is maintained in `ui-ux-project.md`. Backend implementation facts and future Cloudflare controls remain in `backend-architecture.md`.
 
-**Workflow rule:** V1 remains stable on `main`; use `v2-development` for V2. Validate changes on the working branch. Do not open a PR or merge unless the user explicitly requests it after reviewing the work.
+**Workflow rule:** V1 remains stable on `main`; use `v2-development` for V2. Documentation-only updates may be committed directly to `v2-development` when requested. Use separate feature branches primarily for implementation/code changes when appropriate. Do not open a PR or merge unless the user explicitly requests it after reviewing the work.
 
 ## Current authoritative project status — 2 November 2026
 
@@ -42,7 +44,7 @@ This section is the current source of truth. Older dated checkpoints are retaine
 - **Cloudflare persistence:** no D1, KV or R2 binding is configured in the current Worker configuration. The Current Affairs bank is version-controlled JavaScript and runtime fallback generation is request-scoped. D1 was discussed as a future persistence option only.
 - **Monetization:** AdMob is implemented in V1. Google Play Billing, subscriptions, Remove Ads purchases and premium entitlement enforcement are future work, not implemented.
 - **Design tools:** Penpot is the active UI/UX design workspace. Claude is an AI-assisted collaborator for exploration, review and specification refinement. Figma may remain a reference tool, but is not the active design workspace.
-- **Brand:** reuse the exact Ricven/RichInsights palette in `ui-ux-project.md`; do not invent a new palette.
+- **Brand:** reuse the exact Ricven/RichInsights palette in `ui-ux-project.md`; the brand anchor is **Royal Navy** (`#0B2970`), not Deep Navy. Include restrained premium background depth (soft glows, tonal gradients, subtle patterns and shadows) without clutter or childish styling.
 - **Workflow:** V1 remains stable on `main`; V2 work uses `v2-development` (created from `docs/project-documentation-realignment`). Validate branch work; do not open a PR or merge without the user's explicit request.
 
 ### Premium product redesign targets
@@ -54,6 +56,10 @@ This section is the current source of truth. Older dated checkpoints are retaine
 5. **Learning & Performance Centre:** quiz history, accuracy trends, strengths, improvement areas and actionable practice recommendations.
 
 These are design targets, not claims that the V1 application already implements them.
+
+### V2 brand and UI/UX direction — 4 November 2026
+
+The next V2 milestone is the complete brand and native UI/UX foundation, not authentication integration. Royal Navy (`#0B2970`) is the approved brand-anchor name. The visual language should feel premium, crisp, natural and modern, with restrained soft glows, subtle tonal background treatments, low-contrast abstract details and gentle shadows used selectively. Avoid loud gradients, neon-heavy effects, excessive decoration or childish styling. Penpot is the active design workspace; the final icon, adaptive icon, splash, themes, navigation, account screens and optional first-launch tutorial must be designed and reviewed before their native Compose implementation. Sign-in and registration UI are designed early; real email/password and Google sign-in integration follows the native UI foundation.
 
 ## Historical continuity checkpoints
 ## Current Affairs architecture checkpoint — 23 September 2026
@@ -68,7 +74,7 @@ The V1 Current Affairs category is now documented as a **separate fact-first kno
 
 
 **Last updated:** 23 September 2026  
-**Stage:** V1.1.9 Android update-validation fix is implemented, **merged into `main` via PR #6**, and **in-place update testing PASSED**. The app now updates successfully over the previous installed release without requiring uninstall/reinstall, while the new app content loads correctly. Science, General Knowledge, and **Africa & Nigeria are integrated and verified**. The temporary V1.1.9 validation branch has been deleted. **Current focus: complete Bible and Current Affairs, then run the full V1 stabilization pass before major architectural, branding, or UI/UX changes. V2 remains paused.**
+**Stage:** V1.1.9 Android update-validation fix is implemented, **merged into `main` via PR #6**, and **in-place update testing PASSED**. The app now updates successfully over the previous installed release without requiring uninstall/reinstall, while the new app content loads correctly. Science, General Knowledge, and **Africa & Nigeria are integrated and verified**. The temporary V1.1.9 validation branch has been deleted. **Historical checkpoint only:** this V1-era note is superseded by the V1 stabilization and V2 architecture decisions recorded above. V1 remains stable; current work is native V2 brand/UI planning on `v2-development`.
 
 ## Long-term product vision
 Daily Quiz & Challenge is intended to become a **long-term, high-quality quiz system for real users**, not just a small one-off quiz app. The goal is a reliable platform with fresh online questions, strong anti-repetition logic, multiple categories, meaningful difficulty, polished gameplay, useful explanations/results, dependable monetization, and a professional UI/UX that people enjoy returning to. Development should favor a stable foundation and incremental verification so future features can grow without bringing back the old static-question problems.
@@ -738,14 +744,15 @@ These are future requirements, not claims that V1 currently has server-authorita
 11. Android-test the future Bible experience when the native migration begins.
 12. Keep the current V1 Bible entry as a lightweight Coming Soon / In Development state until then.
 
-### Phase C — Major UI/UX redesign
-13. Review ui-ux-project.md using the now-known product architecture.
-14. Map the complete user journey and final information architecture.
-15. Wireframe Home, Categories, Bible, Quiz, Results, Connectivity/Error and Settings.
-16. Define the reusable design system.
-17. Create high-fidelity screens/prototype.
-18. Test the design on the Oppo A56.
-19. Implement the final redesigned product in the planned native Android application after the design and architecture are stable. The current React/Vite/Capacitor app remains the V1 reference implementation and is not the target for the full app-wide navigation redesign.
+### Phase C — Native V2 brand and UI/UX (design-first)
+13. Finalize the app icon, logo/brand mark, Android adaptive icon and native splash direction.
+14. Lock Royal Navy-led color tokens, light/dark themes, typography, spacing, shapes, shadows/elevation and reusable components.
+15. Define restrained premium background treatments that remain crisp, subtle and accessible.
+16. Map the five-tab navigation and complete user journeys; include account entry and a short optional/skippable first-launch tutorial.
+17. Design Home, Explore, Challenges, Rankings, Profile, quiz flows, results, settings, sign-in, registration and recovery in Penpot.
+18. Build and review a clickable prototype on target Android screen sizes.
+19. Implement the approved design in native Kotlin/Jetpack Compose only after design review. The current React/Vite/Capacitor app remains the V1 reference implementation and is not the target for the app-wide redesign.
+20. Integrate email/password and Google authentication after the native UI and account screens are implemented.
 
 ### Phase D — Reliability and regression
 20. Implement centralized connectivity monitoring.
