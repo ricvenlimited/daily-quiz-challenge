@@ -98,7 +98,7 @@ Create an original Daily Quiz & Challenge expression of the Ricven identity usin
 
 | Token | Hex | Intended use |
 |---|---|---|
-| Deep Navy | `#0B2970` | Brand anchor and strong surfaces |
+| Royal Navy | `#0B2970` | Brand anchor and strong surfaces |
 | Blue | `#1769E0` | Primary actions and selected navigation |
 | Electric Cyan | `#19B5FE` | Progress, focus and signature accents |
 | Warm Gold | `#F4B942` | Achievements, trophies and meaningful milestones; use sparingly |
@@ -156,7 +156,7 @@ Typography must feel:
 - Comfortable on smaller phone screens
 - Consistent across all screens
 
-Final font choice will be made during the visual-identity phase.
+Typography selection and exact type scale will be finalized in the V2 visual-identity phase and documented as reusable native theme tokens.
 
 Typography hierarchy should distinguish:
 
@@ -185,7 +185,9 @@ The redesign should prioritize:
 
 Cards should have subtle depth rather than heavy shadows.
 
-Corner radius, spacing scale, shadow system, and component dimensions will be standardized during Phase 2.
+Use restrained background treatments to give selected screens a premium, polished sense of depth: soft ambient glows, very subtle tonal gradients, low-contrast abstract/geometric forms, gentle edge lighting and carefully controlled shadows. These may sit behind a full screen or within selected hero/header/card regions, but must remain secondary to content. Use low opacity, generous negative space and the Royal Navy/Blue/Cyan palette; in light mode keep surfaces bright and clean, and in dark mode use restrained cyan/blue ambient light rather than harsh neon. Avoid busy patterns, strong blur everywhere, multiple competing gradients, glass effects used indiscriminately, heavy drop shadows or decorative elements that look childish. Background effects must not impair contrast, text readability, battery/performance, scrolling or accessibility.
+
+Corner radius, spacing scale, shadow/elevation levels, background treatment tokens and component dimensions will be standardized in the V2 design-system phase.
 
 ## 8. Home Screen Direction
 
@@ -767,22 +769,19 @@ Define:
 - Error/retry paths
 
 ### Phase 2 — Visual Identity
-Lock:
+Lock and document:
 
-- Blue
-- White/near-white
-- Navy
-- Accent colour
-- Typography
-- Icon style
-- Card style
-- Spacing
-- Shadows
-- Corner radius
-- Component rules
+- Royal Navy (`#0B2970`) as the brand anchor
+- Blue, Electric Cyan and Warm Gold accents
+- Light and dark surface/text tokens
+- Typography and type scale
+- App icon, logo mark and Android adaptive icon
+- Native splash and first-launch brand intro
+- Icon style, card style, spacing, shadows/elevation, corner radius and component rules
+- Subtle premium background treatments and accessibility/performance limits
 
 ### Phase 3 — Wireframes
-Design screens without depending heavily on final colours.
+Design the complete native V2 screen inventory and journeys in Penpot, including account screens, before detailed implementation. Use the agreed design tokens while exploring hierarchy and layout.
 
 Focus on:
 
@@ -805,7 +804,7 @@ Target workflow:
 ### Phase 6 — Implementation
 Only after the design is approved:
 
-**Figma/design specification → React/Vite → Capacitor → APK**
+**Approved Penpot design specification → Kotlin/Jetpack Compose native Android → Debug APK**
 
 ### Phase 7 — Regression Testing
 After implementation, verify that the redesign did not break:
@@ -822,17 +821,15 @@ After implementation, verify that the redesign did not break:
 - Loading/error states
 - Release updates/install behaviour
 
-## 24. Figma Workflow
+## 24. Penpot Workflow (Active) 
 
-Figma is the planned design/prototyping environment.
+Penpot is the active editable design/prototyping environment for Daily Quiz & Challenge V2. Figma may be used as a secondary reference or backup, but it is not the primary design workspace.
 
 Target workflow:
 
-**Figma design → interactive prototype → phone testing → refinement → React implementation → APK testing**
+**Product journeys → Penpot wireframes → high-fidelity light/dark designs → interactive prototype → phone testing/refinement → approved Kotlin/Jetpack Compose implementation → Debug APK testing**
 
-Because development is phone-only, the design workflow must remain practical on mobile.
-
-Before relying on any specific Figma mobile editing capability, verify the current capabilities at the time we begin.
+Keep the workflow practical for the available mobile-first development setup. Repository documentation remains the durable record of approved design decisions, screen behavior and implementation status.
 
 ## 25. Design Rules
 
@@ -859,7 +856,7 @@ The existing main `project.md` remains the source of truth for app-development s
 
 ## 27. Current UI/UX Milestone
 
-**Status: Planning / Blueprint Created**
+**Status: V2 product architecture approved; design-first specification underway.**
 
 Completed:
 
@@ -872,50 +869,35 @@ Completed:
 - Component inventory
 - Ad UX principles
 - Accessibility principles
-- Figma/prototype workflow
+- Penpot/prototype workflow
 - Dedicated UI/UX project documentation
 
 Not yet started:
 
-- Final colour selection
+- Final typography and detailed token values
 - Final typography
 - Wireframes
-- High-fidelity screens
-- Interactive prototype
-- Production UI implementation
+- High-fidelity native V2 screens
+- Interactive Penpot prototype
+- Native Compose UI implementation
 
-## 28. Immediate UI/UX Next Steps
+## 28. Immediate UI/UX Next Steps — V2 DESIGN-FIRST MILESTONE
 
-Before high-fidelity implementation, the product architecture must now be treated in two stages:
+V1 is stabilized and remains the reference implementation on `main`. The major redesign belongs to native Android V2 on `v2-development`; do not retrofit this redesign into V1.
 
-1. **V1 stability:** finish Current Affairs and stabilize the existing React/Vite/Capacitor reference app.
-2. **Future native product design:** design the complete app-wide navigation and information architecture, including the Bible experience, as a standalone native Android product blueprint.
+The approved sequence is:
 
-Do not implement the full Bible navigation inside the current V1 merely to make the category functional.
+1. Finalize app icon, logo/brand mark, Android adaptive icon and native splash direction.
+2. Finalize the Royal Navy-led brand tokens, light/dark themes, typography, spacing, shapes, elevation and reusable components.
+3. Define subtle premium screen-background treatments (soft glows, restrained tonal gradients, low-contrast abstract details and soft shadows) with clear limits against visual clutter and childish styling.
+4. Finalize five-tab navigation and all primary/nested user journeys.
+5. Wireframe and design the complete screen inventory in Penpot, including sign-in, registration and recovery screens.
+6. Specify a short optional/skippable first-launch tutorial; it must not become a mandatory separate welcome screen.
+7. Build an interactive Penpot prototype and review it on target Android screen sizes.
+8. Approve the design package before implementing the native Kotlin/Compose foundation and screens.
+9. Integrate email/password and Google authentication only after the native UI and account screens are ready.
 
-
-The UI/UX implementation remains intentionally deferred, but planning must now stay synchronized with backend/category research.
-
-1. Track the Africa & Nigeria provider architecture.
-2. Track the Current Affairs provider/freshness architecture.
-3. Track the Bible Library/offline reader + online quiz architecture.
-4. Review this blueprint against those capabilities.
-5. Map the complete product/user journey.
-6. Create the first wireframes.
-4. Start with the highest-impact screens:
-   - Home
-   - Category selection
-   - Quiz
-   - Results
-7. Review the visual direction.
-8. Establish the reusable design system.
-9. Build the remaining screens.
-10. Create an interactive prototype.
-11. Test the prototype on the Oppo A56.
-12. Refine before touching production UI code.
-13. Implement carefully in React/Vite.
-14. Build an APK.
-15. Perform full regression testing.
+Do not begin a V1 React/Vite redesign. Keep backend/provider work synchronized, but do not let it displace the approved design-first sequence.
 
 ## 29. Long-Term UI/UX Goal
 
@@ -1118,5 +1100,41 @@ In addition to the five tab roots, plan nested screens for category/topic detail
 
 ### Visual design constraints
 
-Continue using the approved shared Ricven/RichInsights palette and design principles already documented in this file. The five-tab structure is approved; exact icons, typography sizing, tab labels, component dimensions, responsive behavior and final screen compositions must be designed and reviewed in Penpot before production implementation.
+Continue using the approved shared Ricven/RichInsights palette, with **Royal Navy** (`#0B2970`) as the brand anchor. The five-tab structure is approved. Final icon, typography, splash, adaptive icon, light/dark theme, component dimensions, subtle background treatments, responsive behavior and screen compositions must be designed and reviewed in Penpot before native implementation.
+
+## V2 brand and native UI implementation plan — 4 November 2026
+
+**Status:** Approved direction and implementation sequence; no claim that assets, Penpot screens or native Compose code are already complete.
+
+### Brand identity and Android launch assets
+- Create a distinctive app icon and matching logo/brand mark that work at small sizes and across light/dark contexts.
+- Produce Android adaptive icon foreground/background assets and verify launcher masking at common shapes.
+- Specify the native Android system splash using the approved brand mark and Royal Navy-led background.
+- Define a short first-launch-only brand intro if needed, with mark, app name and tagline; it must be skippable and must not delay Home or depend on network/auth initialization.
+
+### Design system
+- Royal Navy `#0B2970` is the correct name for the brand anchor. Do not call it Deep Navy.
+- Retain Blue `#1769E0`, Electric Cyan `#19B5FE` and Warm Gold `#F4B942` with the restrained usage rules above.
+- Define semantic colors, light/dark surfaces, typography, spacing, shape, border, elevation and component tokens once, then reuse them throughout Compose.
+- Define a small, consistent elevation scale: soft shadows for separation, not heavy floating-card effects.
+
+### Premium background visual language
+- Use subtle ambient glow or soft radial lighting only where it supports hierarchy (for example, a Home hero, challenge highlight or selected header region).
+- Use low-contrast abstract geometry, fine tonal texture or barely visible patterns sparingly; avoid repeating decoration on every card.
+- Light theme should remain bright, crisp and breathable; dark theme may use soft Royal Navy/Blue tonal depth with restrained Cyan highlights.
+- Prefer layered tonal surfaces and carefully controlled edge/shadow treatment over loud multi-stop gradients, neon glow, excessive blur, glassmorphism or busy illustrations.
+- Keep content, controls and text dominant. Background decoration must never reduce contrast, legibility, touch clarity or performance.
+
+### Navigation, onboarding and account screens
+- Implement five persistent destinations: Home, Explore, Challenges, Rankings and Profile, with nested destinations and predictable Back/Up behavior.
+- Design authentication as separate flows, not bottom-navigation tabs. Sign-in, registration, Google handoff, verification and recovery screens are included in the early Penpot design package.
+- Add a short optional, skippable first-launch tutorial only if it improves discovery. It is an overlay/sequence that can be skipped and revisited from Help/Settings if appropriate, not a mandatory standalone welcome screen.
+- Do not gate Home behind the tutorial, login, remote configuration, ads or network availability. Guest browsing remains subject to the product decision on which public features can be used without an account.
+
+### Design and implementation acceptance
+- Penpot is the active design source; Figma is secondary reference only.
+- Each major flow must include primary, loading, empty, error and relevant offline states, plus light/dark variants where applicable.
+- Approve icon/splash assets, tokens, screen layouts, interactions, accessibility checks and responsive behavior before corresponding Compose implementation.
+- Login/registration UI is designed early; real email/password and Google sign-in integration comes later, after the native UI foundation and screens are in place.
+- Keep V1 source, package/signing identity, production Worker routes and release behavior untouched.
 
